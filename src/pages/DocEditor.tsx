@@ -1,3 +1,4 @@
+import { askConfirm } from '../lib/confirm'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { ChecklistEditor, emptyChecklist } from '../components/Checklist'
@@ -55,7 +56,7 @@ export default function DocEditor({ kind }: { kind: Kind }) {
     if (doc!.simple && !doc!.simple_description?.trim()) throw new Error('Descreva o serviço')
     if (doc!.insurance && !doc!.insurance.insurer.trim()) throw new Error('Informe o nome da seguradora')
     if (kind === 'work_order' && !doc!.entry_date) throw new Error('Informe a data de entrada')
-    const row = { ...doc!, due_date: doc!.due_date || null }
+    const row = kind === 'work_order' ? { ...doc!, due_date: doc!.due_date || null } : doc!
     if (id) return db.update(table, id, row)
     const created = await db.insert(table, { ...row, id: draftId, number: '' } as never)
     if (kind === 'work_order') await db.insert('stage_events', { work_order_id: created.id, stage: (created as WorkOrder).stage, note: 'OS aberta' })
@@ -65,7 +66,7 @@ export default function DocEditor({ kind }: { kind: Kind }) {
   async function cancel() {
     if (!id) {
       const orphan = await db.list('photos', { parent_id: draftId })
-      if (orphan.length && !confirm('Descartar este documento e as fotos adicionadas?')) return
+      if (orphan.length && !(await askConfirm('Descartar este documento e as fotos adicionadas?', 'Descartar'))) return
       for (const p of orphan) {
         await db.remove('photos', p.id)
         await db.deleteFile(p.path)

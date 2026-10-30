@@ -1,3 +1,4 @@
+import { askConfirm } from '../lib/confirm'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { KIND_LABEL } from '../components/ItemsEditor'
@@ -56,7 +57,7 @@ export function Catalog() {
             const r = await run(() => (edit.id ? db.update('catalog_items', edit.id, edit) : db.insert('catalog_items', edit as CatalogItem)), 'Salvo')
             if (r) setEdit(null)
           }}>Salvar</Button>
-          {edit.id && <Button variant="danger" className="w-full" onClick={async () => { if (confirm('Excluir do catálogo?')) { await run(() => db.remove('catalog_items', edit.id!)); setEdit(null) } }}>Excluir</Button>}
+          {edit.id && <Button variant="danger" className="w-full" onClick={async () => { if (await askConfirm('Excluir do catálogo?', 'Excluir')) { await run(() => db.remove('catalog_items', edit.id!)); setEdit(null) } }}>Excluir</Button>}
         </Sheet>
       )}
     </div>

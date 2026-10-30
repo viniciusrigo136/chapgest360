@@ -1,3 +1,4 @@
+import { askConfirm } from '../lib/confirm'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { CarDiagram, SignatureField } from '../components/Checklist'
@@ -111,7 +112,7 @@ export default function WorkOrderView() {
               <span className="flex items-center gap-2">
                 <strong>{money(p.amount)}</strong>
                 {!p.reversed_at && (
-                  <button type="button" className="text-xs font-semibold text-red-700 no-underline" onClick={() => confirm('Estornar este recebimento? Ele continuará no histórico, riscado.') && run(() => db.update('payments', p.id, { reversed_at: new Date().toISOString() }), 'Estornado')}>
+                  <button type="button" className="text-xs font-semibold text-red-700 no-underline" onClick={async () => await askConfirm('Estornar este recebimento? Ele continuará no histórico, riscado.') && run(() => db.update('payments', p.id, { reversed_at: new Date().toISOString() }), 'Estornado')}>
                     estornar
                   </button>
                 )}
@@ -129,7 +130,7 @@ export default function WorkOrderView() {
               <li key={c.id} className="flex justify-between py-2">
                 <span>{COST_CATEGORIES[c.category]} • {c.description}</span>
                 <span className="flex gap-2"><strong>{money(c.amount)}</strong>
-                  <button type="button" className="text-red-600" aria-label="Remover" onClick={() => confirm('Remover este custo?') && run(() => db.remove('costs', c.id))}>✕</button></span>
+                  <button type="button" className="text-red-600" aria-label="Remover" onClick={async () => await askConfirm('Remover este custo?') && run(() => db.remove('costs', c.id))}>✕</button></span>
               </li>
             ))}
           </ul>
@@ -183,7 +184,7 @@ export default function WorkOrderView() {
         {wo.archived_at ? (
           <Button variant="secondary" onClick={() => run(() => db.update('work_orders', wo.id, { archived_at: null }), 'Restaurada')}>Restaurar</Button>
         ) : (
-          <Button variant="danger" onClick={() => confirm('Arquivar esta OS?') && run(() => db.update('work_orders', wo.id, { archived_at: new Date().toISOString() }), 'Arquivada')}>Arquivar</Button>
+          <Button variant="danger" onClick={async () => await askConfirm('Arquivar esta OS?') && run(() => db.update('work_orders', wo.id, { archived_at: new Date().toISOString() }), 'Arquivada')}>Arquivar</Button>
         )}
       </div>
 

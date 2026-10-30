@@ -12,15 +12,35 @@ import type { DocCommon, Quote, Settings, TableName, WorkOrder } from './types'
 const TABLES: TableName[] = ['customers', 'vehicles', 'quotes', 'work_orders', 'stage_events', 'payments', 'photos', 'catalog_items', 'costs']
 const ORG = 'local'
 
-let dbp: Promise<IDBPDatabase> | null = null
+type Store = Pick<IDBPDatabase, 'get' | 'getAll' | 'put' | 'delete'>
+
+/** Sem IndexedDB (aba anônima, navegador embutido): guarda em memória enquanto a página estiver aberta. */
+function memoryStore(): Store {
+  const stores = new Map<string, Map<IDBValidKey, unknown>>()
+  const st = (n: string) => stores.get(n) ?? stores.set(n, new Map()).get(n)!
+  return {
+    get: async (n: string, k: IDBValidKey) => st(n).get(k),
+    getAll: async (n: string) => [...st(n).values()],
+    put: async (n: string, v: unknown, k?: IDBValidKey) => {
+      const key = k ?? (v as { id: string }).id
+      st(n).set(key, v)
+      return key
+    },
+    delete: async (n: string, k: IDBValidKey) => {
+      st(n).delete(k)
+    },
+  } as unknown as Store
+}
+
+let dbp: Promise<Store> | null = null
 const db = () =>
-  (dbp ??= openDB('lataria', 1, {
+  (dbp ??= Promise.resolve().then(() => openDB('lataria', 1, {
     upgrade(d) {
       for (const t of TABLES) d.createObjectStore(t, { keyPath: 'id' })
       d.createObjectStore('meta')
       d.createObjectStore('files')
     },
-  }))
+  })).catch(() => memoryStore()))
 
 const now = () => new Date().toISOString()
 

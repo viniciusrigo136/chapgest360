@@ -1,3 +1,4 @@
+import { askConfirm } from '../lib/confirm'
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CustomerForm, VehicleForm } from '../components/CustomerForm'
@@ -102,7 +103,7 @@ export function CustomerDetail() {
         )}
       </Section>
 
-      <Button variant="danger" className="w-full" onClick={() => confirm('Arquivar este cliente? Ele some das buscas, mas o histórico é mantido.') && run(() => db.update('customers', c.id, { archived_at: new Date().toISOString() }), 'Cliente arquivado').then(() => nav('/clientes'))}>
+      <Button variant="danger" className="w-full" onClick={async () => await askConfirm('Arquivar este cliente? Ele some das buscas, mas o histórico é mantido.') && run(() => db.update('customers', c.id, { archived_at: new Date().toISOString() }), 'Cliente arquivado').then(() => nav('/clientes'))}>
         Arquivar cliente
       </Button>
 

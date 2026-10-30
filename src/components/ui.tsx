@@ -1,3 +1,4 @@
+import { askConfirm } from '../lib/confirm'
 import { useEffect, useState, type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
 import { Link } from 'react-router-dom'
 import { moneyInput, parseMoney } from '../lib/format'
@@ -112,7 +113,7 @@ export function OptionalSection({ title, enabled, onEnable, onDisable, addLabel,
       </button>
     )
   return (
-    <Section title={title} right={<button type="button" className="text-sm font-medium text-red-700" onClick={() => confirm(`Remover "${title}" deste documento?`) && onDisable()}>Remover</button>}>
+    <Section title={title} right={<button type="button" className="text-sm font-medium text-red-700" onClick={async () => await askConfirm(`Remover "${title}" deste documento?`) && onDisable()}>Remover</button>}>
       {children}
     </Section>
   )

@@ -1,3 +1,4 @@
+import { askConfirm } from '../lib/confirm'
 import { useRef, useState } from 'react'
 import { Thumb } from '../components/PhotoManager'
 import { Button, Field, Input, Loading, MoneyInput, PageHeader, Section, TextArea } from '../components/ui'
@@ -148,7 +149,7 @@ export default function Settings() {
                 <input type="checkbox" checked={st.public} onChange={(e) => setStage(i, { public: e.target.checked })} className="h-5 w-5" /> cliente
               </label>
               {!SYSTEM_STAGES.includes(st.key) && (
-                <button type="button" aria-label="Remover etapa" className="h-10 w-8 shrink-0 text-red-600" onClick={() => confirm(`Remover a etapa "${st.name}"?`) && set('stages', s.stages.filter((_, j) => j !== i))}>✕</button>
+                <button type="button" aria-label="Remover etapa" className="h-10 w-8 shrink-0 text-red-600" onClick={async () => await askConfirm(`Remover a etapa "${st.name}"?`) && set('stages', s.stages.filter((_, j) => j !== i))}>✕</button>
               )}
             </li>
           ))}

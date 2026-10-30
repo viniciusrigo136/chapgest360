@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, MemoryRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { Loading } from './components/ui'
 import './index.css'
@@ -47,9 +47,12 @@ function Private() {
   )
 }
 
+// Na demonstração (página única hospedada) as rotas ficam só em memória.
+const Router = import.meta.env.VITE_DEMO ? MemoryRouter : BrowserRouter
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/c/:token" element={<PublicPortal />} />
         <Route
@@ -61,10 +64,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           }
         />
       </Routes>
-    </BrowserRouter>
+    </Router>
   </React.StrictMode>,
 )
 
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
+if ('serviceWorker' in navigator && import.meta.env.PROD && !import.meta.env.VITE_DEMO) {
   navigator.serviceWorker.register('/sw.js').catch(() => {})
 }

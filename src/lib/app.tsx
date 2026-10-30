@@ -29,6 +29,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setLoading(true)
     try {
       const s = await db.getSession()
+      if (import.meta.env.VITE_DEMO && s?.organizationId) await (await import('./demoSeed')).seedDemo(s.organizationId)
       setSession(s)
       setSettings(s?.organizationId ? await db.getSettings() : null)
     } catch {

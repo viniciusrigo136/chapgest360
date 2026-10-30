@@ -19,7 +19,7 @@ export function Layout() {
   return (
     <div className="app-chrome-wrap min-h-dvh">
       {db.mode === 'local' && (
-        <div className="app-chrome bg-amber-100 px-4 py-1 text-center text-xs text-amber-900 lg:pl-64">Modo local de teste — dados salvos só neste aparelho</div>
+        <div className="app-chrome bg-amber-100 px-4 py-1 text-center text-xs text-amber-900 lg:pl-64">{import.meta.env.VITE_DEMO ? 'Demonstração com dados de exemplo — salvos só neste navegador' : 'Modo local de teste — dados salvos só neste aparelho'}</div>
       )}
       <aside className="app-chrome fixed inset-y-0 left-0 hidden w-60 flex-col border-r border-slate-200 bg-white p-3 lg:flex">
         <div className="mb-4 px-3 py-2 text-2xl font-extrabold text-blue-800">Lataria</div>

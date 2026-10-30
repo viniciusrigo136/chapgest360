@@ -1,3 +1,4 @@
+import { askConfirm } from '../lib/confirm'
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ItemsSummary, PartiesCard } from '../components/DocSummary'
@@ -51,7 +52,7 @@ export default function QuoteView() {
       ) : (
         !['recusado', 'cancelado'].includes(q.status) && (
           <Button className="w-full" disabled={busy} onClick={async () => {
-            if (q.status !== 'aprovado' && !confirm('O orçamento ainda não está aprovado. Transformar em OS mesmo assim?')) return
+            if (q.status !== 'aprovado' && !(await askConfirm('O orçamento ainda não está aprovado. Transformar em OS mesmo assim?'))) return
             const wo = await run(() => convertToWorkOrder(q, session!.organizationId!, settings), 'Ordem de serviço criada')
             if (wo) nav(`/os/${wo.id}`)
           }}>
@@ -96,7 +97,7 @@ export default function QuoteView() {
         {q.archived_at ? (
           <Button variant="secondary" onClick={() => run(() => db.update('quotes', q.id, { archived_at: null }), 'Restaurado')}>Restaurar</Button>
         ) : (
-          <Button variant="danger" onClick={() => confirm('Arquivar este orçamento? Você pode restaurá-lo depois.') && run(() => db.update('quotes', q.id, { archived_at: new Date().toISOString() }), 'Arquivado').then(() => nav('/orcamentos'))}>Arquivar</Button>
+          <Button variant="danger" onClick={async () => await askConfirm('Arquivar este orçamento? Você pode restaurá-lo depois.') && run(() => db.update('quotes', q.id, { archived_at: new Date().toISOString() }), 'Arquivado').then(() => nav('/orcamentos'))}>Arquivar</Button>
         )}
       </div>
       <p className="pb-4 text-center text-xs text-slate-400"><Link to="/orcamentos">Voltar para orçamentos</Link></p>

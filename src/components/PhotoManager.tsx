@@ -1,3 +1,4 @@
+import { askConfirm } from '../lib/confirm'
 import { useEffect, useRef, useState } from 'react'
 import { useApp, useLoad } from '../lib/app'
 import { db, filePath } from '../lib/db'
@@ -153,7 +154,7 @@ function PhotoSheet({ photo, stages, all, onClose }: { photo: Photo; stages?: St
         <Button variant="secondary" onClick={() => move(-1)}>← Antes</Button>
         <Button variant="secondary" onClick={() => move(1)}>Depois →</Button>
         <Button variant="danger" onClick={async () => {
-          if (!confirm('Excluir esta foto?')) return
+          if (!(await askConfirm('Excluir esta foto?', 'Excluir'))) return
           await db.remove('photos', p.id)
           await db.deleteFile(p.path)
           onClose()

@@ -28,15 +28,19 @@ npm run dev
 
 Sem configurar a nuvem, o app roda em **modo local**: os dados ficam só naquele navegador. Serve para experimentar.
 
-## Usar de verdade (nuvem, celular + computador)
+## Lovable + Lovable Cloud
+
+Veja o passo a passo e os prompts prontos em [`docs/LOVABLE.md`](docs/LOVABLE.md).
+
+## Usar de verdade com Supabase próprio (alternativa ao Lovable)
 
 1. Crie um projeto gratuito em https://supabase.com.
-2. Em **SQL Editor**, cole e rode o conteúdo de `supabase/migrations/0001_init.sql`.
+2. Em **SQL Editor**, cole e rode o conteúdo de `supabase/migrations/20261030000000_lataria_init.sql`.
 3. Em **Project Settings → API**, copie a *Project URL* e a *anon public key*.
 4. Crie um arquivo `.env` (veja `.env.example`):
    ```
    VITE_SUPABASE_URL=https://xxxx.supabase.co
-   VITE_SUPABASE_ANON_KEY=eyJ...
+   VITE_SUPABASE_PUBLISHABLE_KEY=eyJ...
    ```
 5. Publique, por exemplo na Vercel: importe o repositório e cadastre as duas variáveis acima. O `vercel.json` já está pronto.
 6. Abra o site, crie sua conta e informe o nome da oficina. Depois, no celular, use "Adicionar à tela inicial".

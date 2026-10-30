@@ -1,5 +1,6 @@
+import { askConfirm } from '../lib/confirm'
 import { useCallback, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useQr } from '../components/ShareBox'
 import { usePhotoUrl } from '../components/PhotoManager'
 import type { PublicRaw } from '../lib/backend'
@@ -38,6 +39,7 @@ export default function PublicPortal() {
 }
 
 function Portal({ raw, token, reload }: { raw: PublicRaw; token: string; reload: () => void }) {
+  const nav = useNavigate()
   const c = raw.company
   const d = raw.doc
   const color = c.brand_color || '#1d4ed8'
@@ -53,6 +55,11 @@ function Portal({ raw, token, reload }: { raw: PublicRaw; token: string; reload:
 
   return (
     <div className="mx-auto min-h-dvh max-w-xl bg-slate-50 pb-10">
+      {import.meta.env.VITE_DEMO && (
+        <button type="button" onClick={() => nav(-1)} className="w-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-900">
+          Demonstração: esta é a página que o cliente vê. Toque aqui para voltar ao sistema.
+        </button>
+      )}
       <header className="px-4 pb-6 pt-5 text-white" style={{ background: color }}>
         <div className="flex items-center gap-3">
           {logo && <img src={logo} alt="" className="h-14 w-14 rounded-lg bg-white object-contain p-1" />}
@@ -164,7 +171,7 @@ function QuoteStatusCard({ raw, token, reload }: { raw: PublicRaw; token: string
 
   async function decide(approve: boolean) {
     if (name.trim().length < 2) return setErr('Informe seu nome')
-    if (!approve && !confirm('Recusar este orçamento?')) return
+    if (!approve && !(await askConfirm('Recusar este orçamento?', 'Recusar'))) return
     setBusy(true)
     try {
       await db.publicDecision(token, approve, name.trim(), note.trim())

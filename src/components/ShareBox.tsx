@@ -1,5 +1,7 @@
+import { askConfirm } from '../lib/confirm'
 import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useApp } from '../lib/app'
 import { dateTime } from '../lib/format'
 import { copyText, publicUrl, whatsappUrl } from '../lib/share'
@@ -37,12 +39,16 @@ export function ShareBox({ open, onClose, token, enabled, lastViewed, phone, mes
               <Button variant="secondary" onClick={async () => toast((await copyText(link)) ? 'Link copiado' : 'Não foi possível copiar', 'ok')}>Copiar link</Button>
               <a href={qr} download={`qrcode-${token.slice(0, 6)}.png`} className="inline-flex min-h-11 items-center justify-center rounded-lg border border-slate-300 font-semibold">Baixar QR</a>
             </div>
-            <a href={link} target="_blank" rel="noreferrer" className="text-sm font-semibold text-blue-700">Abrir página do cliente ↗</a>
+            {import.meta.env.VITE_DEMO ? (
+              <Link to={`/c/${token}`} className="text-sm font-semibold text-blue-700">Abrir página do cliente ↗</Link>
+            ) : (
+              <a href={link} target="_blank" rel="noreferrer" className="text-sm font-semibold text-blue-700">Abrir página do cliente ↗</a>
+            )}
           </div>
           <p className="text-xs text-slate-500">{lastViewed ? `Cliente abriu o link em ${dateTime(lastViewed)}` : 'O cliente ainda não abriu o link.'}</p>
           <div className="grid grid-cols-2 gap-2">
-            <Button variant="danger" onClick={() => confirm('Desativar o link? O cliente não conseguirá mais abrir a página.') && onToggle(false)}>Desativar link</Button>
-            <Button variant="secondary" onClick={() => confirm('Gerar um novo link? O link antigo deixará de funcionar.') && onRegenerate()}>Gerar novo link</Button>
+            <Button variant="danger" onClick={async () => await askConfirm('Desativar o link? O cliente não conseguirá mais abrir a página.') && onToggle(false)}>Desativar link</Button>
+            <Button variant="secondary" onClick={async () => await askConfirm('Gerar um novo link? O link antigo deixará de funcionar.') && onRegenerate()}>Gerar novo link</Button>
           </div>
         </>
       ) : (

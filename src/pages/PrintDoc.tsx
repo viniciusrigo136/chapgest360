@@ -55,7 +55,9 @@ export default function PrintDoc() {
         <Button className="flex-1" disabled={!ready} onClick={() => window.print()}>{ready ? 'Imprimir / Salvar PDF' : 'Carregando fotos…'}</Button>
       </div>
       <p className="px-4 pt-3 text-center text-xs text-slate-500 print:hidden">
-        No celular, escolha "Salvar como PDF" na tela de impressão para gerar o arquivo e compartilhar.
+        {import.meta.env.VITE_DEMO
+          ? 'Na demonstração a janela de impressão fica bloqueada pelo navegador. No sistema publicado, o botão abre a impressão e "Salvar como PDF".'
+          : 'No celular, escolha "Salvar como PDF" na tela de impressão para gerar o arquivo e compartilhar.'}
       </p>
       <ScaledA4>
         {kind === 'recibo' ? (
