@@ -24,7 +24,7 @@ export function askConfirm(message: string, okLabel = 'Confirmar'): Promise<bool
       return b
     }
     const cancel = btn('Cancelar', 'border border-slate-300 bg-white text-slate-800', false)
-    const ok = btn(okLabel, 'bg-blue-700 text-white', true)
+    const ok = btn(okLabel, 'bg-brand-700 text-white', true)
     const close = (v: boolean) => {
       document.removeEventListener('keydown', onKey)
       wrap.remove()

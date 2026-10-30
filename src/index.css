@@ -1,8 +1,29 @@
 @import "tailwindcss";
 
+/* Oficina: azul de carroceria como cor principal, neutros levemente azulados, fonte arredondada e legível. */
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-plate: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  --color-brand-50: #eef3ff;
+  --color-brand-100: #dce6ff;
+  --color-brand-200: #bccdff;
+  --color-brand-300: #8eaaff;
+  --color-brand-500: #3a63e8;
+  --color-brand-600: #1f47c7;
+  --color-brand-700: #1a3ba3;
+  --color-brand-800: #172f7d;
+  --color-ink: #13203a;
+  --color-page: #f2f4f8;
+  --color-wa: #1fa855;
+  --color-wa-dark: #178a45;
+}
+
 html { -webkit-tap-highlight-color: transparent; }
-body { background: #f1f5f9; color: #0f172a; }
+body { background: var(--color-page); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 summary { min-height: 1.75rem; }
+summary::-webkit-details-marker { display: none; }
+input, select, textarea, button { font: inherit; }
+.tnum { font-variant-numeric: tabular-nums; }
 
 /* Folha A4: 210 × 297 mm, margens de 12 mm. Na tela é reduzida com zoom para caber no celular. */
 .a4 {
@@ -12,7 +33,7 @@ summary { min-height: 1.75rem; }
   background: #fff;
   box-shadow: 0 1px 6px rgb(0 0 0 / 0.15);
   zoom: var(--z, 1);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
   color: #0f172a;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;

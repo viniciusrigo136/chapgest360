@@ -1,11 +1,12 @@
+import { ChevronRight, Plus, UserRound } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useLoad } from '../lib/app'
 import { db } from '../lib/db'
-import { digits, normalizePlate, phone, plate } from '../lib/format'
+import { digits, normalizePlate, phone } from '../lib/format'
 import { vehicleLabel } from '../lib/share'
 import type { Customer, Vehicle } from '../lib/types'
 import { CustomerForm, VehicleForm } from './CustomerForm'
-import { Button, Input, Sheet } from './ui'
+import { Button, Input, Plate, Sheet } from './ui'
 
 type Step = 'search' | 'new-customer' | 'vehicle' | 'new-vehicle'
 
@@ -59,34 +60,42 @@ export function CustomerVehiclePicker({ customerId, vehicleId, onChange }: {
 
   return (
     <>
-      <button type="button" onClick={start} className="flex min-h-16 w-full items-center justify-between rounded-xl border border-slate-300 bg-white px-4 py-3 text-left active:bg-slate-50">
+      <button type="button" onClick={start} className={`flex min-h-18 w-full items-center gap-3 rounded-2xl bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(19,32,58,0.06)] active:bg-slate-50 ${customer ? 'ring-1 ring-slate-200' : 'ring-2 ring-brand-500'}`}>
         {customer ? (
-          <div>
-            <div className="font-semibold text-slate-900">{customer.name}</div>
-            <div className="text-sm text-slate-600">
-              {vehicle ? `${vehicleLabel(vehicle)} • ${plate(vehicle.plate)}` : 'Escolha o veículo'}
+          <>
+            {vehicle ? <Plate value={vehicle.plate} /> : <UserRound className="text-slate-400" />}
+            <div className="min-w-0 flex-1">
+              <div className="truncate font-bold">{customer.name}</div>
+              <div className="truncate text-sm text-slate-500">{vehicle ? vehicleLabel(vehicle) : 'Escolha o carro'}</div>
             </div>
-          </div>
+          </>
         ) : (
-          <span className="font-semibold text-blue-700">Escolher cliente e veículo *</span>
+          <>
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><UserRound size={22} /></span>
+            <span className="flex-1">
+              <span className="block font-bold text-brand-700">Escolher cliente e carro</span>
+              <span className="block text-sm text-slate-500">Busque pelo nome ou placa</span>
+            </span>
+          </>
         )}
-        <span className="text-slate-400">›</span>
+        <ChevronRight size={20} className="text-slate-400" />
       </button>
 
-      <Sheet open={open} onClose={() => setOpen(false)} title={step === 'new-customer' ? 'Novo cliente' : step === 'search' ? 'Cliente' : `Veículo de ${picked?.name}`}>
+      <Sheet open={open} onClose={() => setOpen(false)} title={step === 'new-customer' ? 'Novo cliente' : step === 'search' ? 'Qual cliente?' : `Carro de ${picked?.name.split(' ')[0]}`}>
         {step === 'search' && (
           <>
             <Input type="search" autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="Nome, telefone ou placa" />
-            <Button className="w-full" variant="secondary" onClick={() => setStep('new-customer')}>
-              + Novo cliente
+            <Button className="w-full" variant="secondary" icon={Plus} onClick={() => setStep('new-customer')}>
+              Novo cliente
             </Button>
             <ul className="divide-y divide-slate-100">
               {results.map(({ c, vs }) => (
                 <li key={c.id}>
                   <button type="button" onClick={() => pickCustomer(c)} className="w-full py-3 text-left active:bg-slate-50">
                     <div className="font-semibold">{c.name}</div>
-                    <div className="text-sm text-slate-600">
-                      {[phone(c.phone), vs.map((v) => plate(v.plate)).join(', ')].filter(Boolean).join(' • ') || 'Sem veículo'}
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
+                      {vs.map((v) => <Plate key={v.id} value={v.plate} size="sm" />)}
+                      <span>{phone(c.phone) || (vs.length ? '' : 'Sem carro')}</span>
                     </div>
                   </button>
                 </li>
@@ -101,15 +110,15 @@ export function CustomerVehiclePicker({ customerId, vehicleId, onChange }: {
             <ul className="divide-y divide-slate-100">
               {data?.vehicles.filter((v) => v.customer_id === picked.id).map((v) => (
                 <li key={v.id}>
-                  <button type="button" onClick={() => finish(v)} className="w-full py-3 text-left active:bg-slate-50">
-                    <div className="font-semibold">{plate(v.plate)}</div>
-                    <div className="text-sm text-slate-600">{vehicleLabel(v)}</div>
+                  <button type="button" onClick={() => finish(v)} className="flex w-full items-center gap-3 py-3 text-left active:bg-slate-50">
+                    <Plate value={v.plate} />
+                    <span className="font-semibold">{vehicleLabel(v)}</span>
                   </button>
                 </li>
               ))}
             </ul>
-            <Button className="w-full" variant="secondary" onClick={() => setStep('new-vehicle')}>
-              + Outro veículo
+            <Button className="w-full" variant="secondary" icon={Plus} onClick={() => setStep('new-vehicle')}>
+              Outro carro
             </Button>
           </>
         )}

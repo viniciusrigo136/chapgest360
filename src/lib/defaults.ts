@@ -63,7 +63,7 @@ export const DAMAGE_TYPES = { amassado: 'Amassado', risco: 'Risco', quebrado: 'Q
 
 export const QUOTE_STATUS = {
   rascunho: { label: 'Rascunho', cls: 'bg-slate-200 text-slate-800' },
-  enviado: { label: 'Aguardando aprovação', cls: 'bg-amber-100 text-amber-900' },
+  enviado: { label: 'Esperando cliente', cls: 'bg-amber-100 text-amber-800' },
   aprovado: { label: 'Aprovado', cls: 'bg-green-100 text-green-900' },
   recusado: { label: 'Recusado', cls: 'bg-red-100 text-red-900' },
   expirado: { label: 'Expirado', cls: 'bg-orange-100 text-orange-900' },

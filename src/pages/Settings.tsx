@@ -1,7 +1,9 @@
-import { askConfirm } from '../lib/confirm'
+import { BookOpen, Building2, ChevronRight, CreditCard, FileText, ImagePlus, ListOrdered, LogOut, MapPin, MessageCircle, Plus, X } from 'lucide-react'
 import { useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { askConfirm } from '../lib/confirm'
 import { Thumb } from '../components/PhotoManager'
-import { Button, Field, Input, Loading, MoneyInput, PageHeader, Section, TextArea } from '../components/ui'
+import { Button, Card, Collapsible, Field, Input, Loading, MoneyInput, PageHeader, TextArea } from '../components/ui'
 import { useAction, useApp } from '../lib/app'
 import { db, filePath } from '../lib/db'
 import { digits, isValidDocument } from '../lib/format'
@@ -11,7 +13,7 @@ import type { Settings as S, Stage } from '../lib/types'
 const SYSTEM_STAGES = ['recebido', 'pronto', 'entregue']
 
 export default function Settings() {
-  const { settings, saveSettings, session } = useApp()
+  const { settings, saveSettings, session, reloadSession } = useApp()
   const { busy, run } = useAction()
   const [s, setS] = useState<S | null>(settings)
   const logoRef = useRef<HTMLInputElement>(null)
@@ -47,119 +49,126 @@ export default function Settings() {
   const setStage = (i: number, patch: Partial<Stage>) => set('stages', s.stages.map((st, j) => (j === i ? { ...st, ...patch } : st)))
 
   return (
-    <div className="space-y-4 pb-24">
-      <PageHeader title="Configurações" back="/mais" />
-      <p className="text-sm text-slate-600">Esses dados aparecem no cabeçalho dos orçamentos, OS, recibos e na página do cliente.</p>
+    <div className="space-y-3 pb-28">
+      <PageHeader title="Configurações" subtitle="Aparece nos orçamentos, serviços e na página do cliente" back="/" />
 
-      <Section title="Empresa">
-        <div className="flex items-center gap-3">
-          {s.logo_url ? <Thumb path={s.logo_url} className="h-20 w-20 rounded-lg border border-slate-200 bg-white !object-contain" /> : <div className="flex h-20 w-20 items-center justify-center rounded-lg border-2 border-dashed border-slate-300 text-xs text-slate-400">Logo</div>}
-          <div className="flex flex-col gap-2">
-            <Button variant="secondary" onClick={() => logoRef.current?.click()}>Escolher logo</Button>
-            {s.logo_url && <button type="button" className="text-sm text-red-700" onClick={() => set('logo_url', undefined)}>Remover</button>}
+      <Collapsible title="Sua oficina" subtitle="Nome, logo, WhatsApp e PIX" icon={Building2} defaultOpen>
+        <div className="flex items-center gap-4">
+          <button type="button" onClick={() => logoRef.current?.click()} className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-50 ring-1 ring-slate-200" aria-label="Escolher logo">
+            {s.logo_url ? <Thumb path={s.logo_url} className="h-full w-full !object-contain" /> : <ImagePlus className="text-slate-400" />}
+          </button>
+          <div className="space-y-1">
+            <Button variant="secondary" className="min-h-10" onClick={() => logoRef.current?.click()}>{s.logo_url ? 'Trocar logo' : 'Colocar logo'}</Button>
+            {s.logo_url && <button type="button" className="block text-sm font-semibold text-red-600" onClick={() => set('logo_url', undefined)}>Remover logo</button>}
           </div>
           <input ref={logoRef} type="file" accept="image/*" className="hidden" onChange={(e) => uploadLogo(e.target.files?.[0])} />
         </div>
         {text('trade_name', 'Nome fantasia *')}
         {text('tagline', 'Especialidade / slogan', { placeholder: 'Funilaria • Pintura • Polimento' })}
+        <div className="grid grid-cols-2 gap-3">
+          {text('whatsapp', 'WhatsApp', { type: 'tel', inputMode: 'tel' })}
+          {text('city', 'Cidade')}
+        </div>
+        {text('pix_key', 'Chave PIX', { placeholder: 'CPF, CNPJ, e-mail, celular ou chave aleatória' })}
+      </Collapsible>
+
+      <Collapsible title="Endereço e documentos" subtitle="CNPJ, endereço, Instagram, cor da marca" icon={MapPin}>
         {text('legal_name', 'Razão social')}
         <div className="grid grid-cols-2 gap-3">
           <Field label="CNPJ ou CPF" error={s.document && !isValidDocument(s.document) ? 'Documento inválido' : null}>
             <Input inputMode="numeric" value={s.document ?? ''} onChange={(e) => set('document', e.target.value)} />
           </Field>
           {text('state_registration', 'Inscrição estadual')}
-        </div>
-        <Field label="Cor da marca">
-          <div className="flex items-center gap-3">
-            <input type="color" value={s.brand_color} onChange={(e) => set('brand_color', e.target.value)} className="h-11 w-16 rounded border border-slate-300" />
-            <span className="text-sm text-slate-600">Usada no cabeçalho dos documentos e na página do cliente</span>
-          </div>
-        </Field>
-      </Section>
-
-      <Section title="Contato e endereço">
-        <div className="grid grid-cols-2 gap-3">
-          {text('phone', 'Telefone', { type: 'tel', inputMode: 'tel' })}
-          {text('whatsapp', 'WhatsApp', { type: 'tel', inputMode: 'tel' })}
+          {text('phone', 'Telefone fixo', { type: 'tel', inputMode: 'tel' })}
+          {text('instagram', 'Instagram', { placeholder: '@suaoficina' })}
         </div>
         {text('email', 'E-mail', { type: 'email' })}
-        <div className="grid grid-cols-2 gap-3">
-          {text('instagram', 'Instagram', { placeholder: '@suaoficina' })}
-          {text('website', 'Site')}
-        </div>
-        <Field label="CEP" hint="Preenche o endereço automaticamente">
+        <Field label="CEP" hint="Preenche o endereço sozinho">
           <Input inputMode="numeric" value={s.zip ?? ''} onChange={(e) => set('zip', e.target.value)} onBlur={fillCep} />
         </Field>
         <div className="grid grid-cols-[1fr_6rem] gap-3">
           {text('street', 'Rua')}
           {text('number', 'Número')}
         </div>
-        {text('district', 'Bairro')}
         <div className="grid grid-cols-[1fr_5rem] gap-3">
-          {text('city', 'Cidade')}
+          {text('district', 'Bairro')}
           {text('state', 'UF', { maxLength: 2, className: 'uppercase' })}
         </div>
         {text('opening_hours', 'Horário de funcionamento', { placeholder: 'Seg a sex 8h–18h, sáb 8h–12h' })}
-      </Section>
+        {text('website', 'Site')}
+        <Field label="Cor da marca (documentos e página do cliente)">
+          <input type="color" value={s.brand_color} onChange={(e) => set('brand_color', e.target.value)} className="h-12 w-20 rounded-xl ring-1 ring-slate-200" />
+        </Field>
+      </Collapsible>
 
-      <Section title="Pagamento">
-        <div className="grid grid-cols-2 gap-3">
-          {text('pix_key', 'Chave PIX')}
-          {text('pix_name', 'Nome do favorecido')}
-        </div>
+      <Collapsible title="Pagamento e parcelas" subtitle="Parcelamento, desconto à vista, sua hora" icon={CreditCard}>
+        {text('pix_name', 'Nome de quem recebe o PIX')}
         <div className="grid grid-cols-3 gap-3">
-          <Field label="Máx. parcelas"><Input inputMode="numeric" value={s.max_installments} onChange={(e) => set('max_installments', Math.min(24, Math.max(1, Number(digits(e.target.value)) || 1)))} /></Field>
-          <Field label="Taxa parcel. %"><Input inputMode="decimal" value={s.installment_fee_percent} onChange={(e) => set('installment_fee_percent', Number(e.target.value.replace(',', '.')) || 0)} /></Field>
+          <Field label="Até quantas vezes"><Input inputMode="numeric" value={s.max_installments} onChange={(e) => set('max_installments', Math.min(24, Math.max(1, Number(digits(e.target.value)) || 1)))} /></Field>
+          <Field label="Juros parc. %"><Input inputMode="decimal" value={s.installment_fee_percent} onChange={(e) => set('installment_fee_percent', Number(e.target.value.replace(',', '.')) || 0)} /></Field>
           <Field label="Desc. à vista %"><Input inputMode="decimal" value={s.cash_discount_percent} onChange={(e) => set('cash_discount_percent', Number(e.target.value.replace(',', '.')) || 0)} /></Field>
         </div>
-        <Field label="Valor da sua hora de trabalho" hint="Usado no lançamento de horas nos custos da OS">
+        <Field label="Quanto vale sua hora de trabalho" hint="Usado para anotar horas nos gastos do serviço">
           <MoneyInput value={s.hourly_rate} onChange={(v) => set('hourly_rate', v)} />
         </Field>
-      </Section>
+      </Collapsible>
 
-      <Section title="Documentos">
-        <div className="grid grid-cols-3 gap-3">
-          {text('quote_prefix', 'Prefixo orç.')}
-          {text('work_order_prefix', 'Prefixo OS')}
-          <Field label="Validade (dias)"><Input inputMode="numeric" value={s.quote_validity_days} onChange={(e) => set('quote_validity_days', Number(digits(e.target.value)) || 1)} /></Field>
-        </div>
-        <Field label="Condições gerais"><TextArea value={s.general_terms} onChange={(e) => set('general_terms', e.target.value)} /></Field>
+      <Collapsible title="Textos dos documentos" subtitle="Garantia, condições, validade" icon={FileText}>
         <Field label="Garantia"><TextArea value={s.warranty_terms} onChange={(e) => set('warranty_terms', e.target.value)} /></Field>
+        <Field label="Condições gerais"><TextArea value={s.general_terms} onChange={(e) => set('general_terms', e.target.value)} /></Field>
+        <div className="grid grid-cols-3 gap-3">
+          <Field label="Validade (dias)"><Input inputMode="numeric" value={s.quote_validity_days} onChange={(e) => set('quote_validity_days', Number(digits(e.target.value)) || 1)} /></Field>
+          {text('quote_prefix', 'Sigla orç.')}
+          {text('work_order_prefix', 'Sigla OS')}
+        </div>
         <label className="flex min-h-11 items-center gap-3">
-          <input type="checkbox" className="h-5 w-5" checked={s.show_values_on_portal} onChange={(e) => set('show_values_on_portal', e.target.checked)} />
-          <span className="text-sm">Mostrar valores e saldo na página de acompanhamento da OS</span>
+          <input type="checkbox" className="h-5 w-5 accent-brand-600" checked={s.show_values_on_portal} onChange={(e) => set('show_values_on_portal', e.target.checked)} />
+          <span className="text-sm">Mostrar valores e quanto falta pagar na página do cliente</span>
         </label>
-      </Section>
+      </Collapsible>
 
-      <Section title="Mensagens de WhatsApp">
-        <p className="text-xs text-slate-500">Variáveis: {'{cliente} {veiculo} {placa} {numero} {link} {etapa} {previsao}'}</p>
-        <Field label="Envio de orçamento"><TextArea value={s.templates.quote} onChange={(e) => set('templates', { ...s.templates, quote: e.target.value })} /></Field>
-        <Field label="Envio de OS"><TextArea value={s.templates.work_order} onChange={(e) => set('templates', { ...s.templates, work_order: e.target.value })} /></Field>
-        <Field label="Mudança de etapa"><TextArea value={s.templates.stage} onChange={(e) => set('templates', { ...s.templates, stage: e.target.value })} /></Field>
-        <Field label="Veículo pronto"><TextArea value={s.templates.ready} onChange={(e) => set('templates', { ...s.templates, ready: e.target.value })} /></Field>
-      </Section>
+      <Collapsible title="Mensagens do WhatsApp" subtitle="O texto que vai junto com o link" icon={MessageCircle}>
+        <p className="text-xs text-slate-500">Palavras trocadas sozinhas: {'{cliente} {veiculo} {placa} {numero} {link} {etapa} {previsao}'}</p>
+        <Field label="Ao mandar orçamento"><TextArea value={s.templates.quote} onChange={(e) => set('templates', { ...s.templates, quote: e.target.value })} /></Field>
+        <Field label="Ao receber o carro"><TextArea value={s.templates.work_order} onChange={(e) => set('templates', { ...s.templates, work_order: e.target.value })} /></Field>
+        <Field label="Ao mudar de etapa"><TextArea value={s.templates.stage} onChange={(e) => set('templates', { ...s.templates, stage: e.target.value })} /></Field>
+        <Field label="Carro pronto"><TextArea value={s.templates.ready} onChange={(e) => set('templates', { ...s.templates, ready: e.target.value })} /></Field>
+      </Collapsible>
 
-      <Section title="Etapas da OS">
+      <Collapsible title="Etapas do serviço" subtitle={`${s.stages.length} etapas`} icon={ListOrdered}>
         <ul className="space-y-2">
           {s.stages.map((st, i) => (
             <li key={st.key} className="flex items-center gap-2">
-              <input type="color" value={st.color} onChange={(e) => setStage(i, { color: e.target.value })} className="h-10 w-10 shrink-0 rounded border border-slate-300" />
+              <input type="color" value={st.color} onChange={(e) => setStage(i, { color: e.target.value })} className="h-11 w-11 shrink-0 rounded-xl ring-1 ring-slate-200" aria-label="Cor da etapa" />
               <Input value={st.name} onChange={(e) => setStage(i, { name: e.target.value })} />
-              <label className="flex shrink-0 items-center gap-1 text-xs" title="Visível para o cliente">
-                <input type="checkbox" checked={st.public} onChange={(e) => setStage(i, { public: e.target.checked })} className="h-5 w-5" /> cliente
-              </label>
-              {!SYSTEM_STAGES.includes(st.key) && (
-                <button type="button" aria-label="Remover etapa" className="h-10 w-8 shrink-0 text-red-600" onClick={async () => await askConfirm(`Remover a etapa "${st.name}"?`) && set('stages', s.stages.filter((_, j) => j !== i))}>✕</button>
-              )}
+              {!SYSTEM_STAGES.includes(st.key) ? (
+                <button type="button" aria-label="Remover etapa" className="flex h-11 w-9 shrink-0 items-center justify-center text-red-600" onClick={async () => (await askConfirm(`Remover a etapa "${st.name}"?`, 'Remover')) && set('stages', s.stages.filter((_, j) => j !== i))}><X size={18} /></button>
+              ) : <span className="w-9 shrink-0" />}
             </li>
           ))}
         </ul>
-        <p className="text-xs text-slate-500">"Veículo recebido", "Pronto para entrega" e "Entregue" são usadas pelo sistema e não podem ser removidas.</p>
-        <Button variant="secondary" onClick={() => set('stages', [...s.stages.slice(0, -2), { key: `etapa_${Date.now()}`, name: 'Nova etapa', color: '#64748b', public: true }, ...s.stages.slice(-2)])}>+ Etapa</Button>
-      </Section>
+        <Button variant="secondary" icon={Plus} onClick={() => set('stages', [...s.stages.slice(0, -2), { key: `etapa_${Date.now()}`, name: 'Nova etapa', color: '#64748b', public: true }, ...s.stages.slice(-2)])}>Etapa</Button>
+      </Collapsible>
 
-      <div className="fixed inset-x-0 bottom-16 z-30 border-t border-slate-200 bg-white p-3 lg:bottom-0 lg:left-60">
-        <Button className="mx-auto flex w-full max-w-3xl" disabled={busy || !s.trade_name.trim()} onClick={() => run(() => saveSettings(s), 'Configurações salvas')}>
+      <Link to="/catalogo" className="flex min-h-14 items-center gap-3 rounded-2xl bg-white px-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70 active:bg-slate-50">
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><BookOpen size={18} /></span>
+        <span className="flex-1"><span className="block text-[15px] font-bold">Serviços com preço</span><span className="block text-xs text-slate-500">Aparecem como sugestão no orçamento</span></span>
+        <ChevronRight size={20} className="text-slate-400" />
+      </Link>
+
+      <Card className="text-sm text-slate-600">
+        {db.mode === 'local' ? (
+          <p><strong>Modo de teste:</strong> os dados ficam só neste navegador.</p>
+        ) : (
+          <div className="flex items-center justify-between gap-2">
+            <span className="min-w-0 truncate">Conectado como {session?.email}</span>
+            <Button variant="secondary" icon={LogOut} className="min-h-10" onClick={async () => { await db.signOut(); await reloadSession() }}>Sair</Button>
+          </div>
+        )}
+      </Card>
+
+      <div className="fixed inset-x-0 bottom-16 z-30 border-t border-slate-200 bg-white/95 p-3 backdrop-blur lg:bottom-0 lg:left-60">
+        <Button className="mx-auto flex w-full max-w-xl lg:max-w-3xl" disabled={busy || !s.trade_name.trim()} onClick={() => run(() => saveSettings(s), 'Configurações salvas')}>
           Salvar configurações
         </Button>
       </div>

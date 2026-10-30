@@ -8,8 +8,8 @@ import { AppProvider, useApp } from './lib/app'
 import { CustomerDetail, CustomerList, VehicleDetail } from './pages/Customers'
 import Dashboard from './pages/Dashboard'
 import DocEditor from './pages/DocEditor'
-import { Production, QuoteList, WorkOrderList } from './pages/Lists'
-import { Catalog, CreateOrganization, Login, More } from './pages/Misc'
+import { QuoteList, WorkOrderList } from './pages/Lists'
+import { Catalog, CreateOrganization, Login } from './pages/Misc'
 import PrintDoc from './pages/PrintDoc'
 import PublicPortal from './pages/PublicPortal'
 import QuoteView from './pages/QuoteView'
@@ -34,13 +34,13 @@ function Private() {
         <Route path="os/nova" element={<DocEditor kind="work_order" key="new-os" />} />
         <Route path="os/:id" element={<WorkOrderView />} />
         <Route path="os/:id/editar" element={<DocEditor kind="work_order" />} />
-        <Route path="producao" element={<Production />} />
+        <Route path="producao" element={<Navigate to="/os" replace />} />
         <Route path="clientes" element={<CustomerList />} />
         <Route path="clientes/:id" element={<CustomerDetail />} />
         <Route path="veiculos/:id" element={<VehicleDetail />} />
         <Route path="catalogo" element={<Catalog />} />
         <Route path="config" element={<Settings />} />
-        <Route path="mais" element={<More />} />
+        <Route path="mais" element={<Navigate to="/config" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

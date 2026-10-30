@@ -19,7 +19,7 @@ export function PaymentTermsEditor({ terms, onChange, total, settings, hasInsura
           .filter((m) => m !== 'seguradora' || hasInsurance)
           .map((m) => (
             <button key={m} type="button" onClick={() => toggle(m)}
-              className={`min-h-10 rounded-full border px-3 text-sm font-semibold ${terms.methods.includes(m) ? 'border-blue-700 bg-blue-700 text-white' : 'border-slate-300 bg-white text-slate-700'}`}>
+              className={`min-h-10 rounded-full px-3.5 text-sm font-semibold ${terms.methods.includes(m) ? 'bg-brand-600 text-white' : 'bg-white text-slate-600 ring-1 ring-slate-200'}`}>
               {PAYMENT_METHODS[m]}
             </button>
           ))}
@@ -37,14 +37,14 @@ export function PaymentTermsEditor({ terms, onChange, total, settings, hasInsura
         </Field>
       </div>
       {(terms.installments > 1 || terms.down_payment > 0) && (
-        <p className="rounded-lg bg-slate-100 px-3 py-2 text-sm">
+        <p className="rounded-xl bg-white ring-1 ring-slate-200 px-3 py-2 text-sm">
           {terms.down_payment > 0 && <>Entrada de {money(terms.down_payment)}{financed > 0 ? ' + ' : ''}</>}
           {financed > 0 && (terms.installments > 1 ? <>{terms.installments}x de {money(inst.values[0])}{settings.installment_fee_percent > 0 && ` (total ${money(inst.total)})`}</> : <>{money(financed)} na entrega</>)}
         </p>
       )}
       {settings.pix_key && (
         <label className="flex min-h-11 items-center gap-3">
-          <input type="checkbox" className="h-5 w-5" checked={terms.show_pix_qr} onChange={(e) => set('show_pix_qr', e.target.checked)} />
+          <input type="checkbox" className="h-5 w-5 accent-brand-600" checked={terms.show_pix_qr} onChange={(e) => set('show_pix_qr', e.target.checked)} />
           <span className="text-sm">Mostrar QR Code PIX no documento</span>
         </label>
       )}
@@ -75,8 +75,8 @@ export function InsuranceEditor({ ins, onChange, total }: { ins: Insurance; onCh
         <MoneyInput value={ins.customer_pays} onChange={(v) => set('customer_pays', v)} />
       </Field>
       <div className="grid grid-cols-2 gap-2 text-sm">
-        <div className="rounded-lg bg-slate-100 p-3"><div className="text-slate-600">Cliente</div><strong className="text-base">{money(split.customer)}</strong></div>
-        <div className="rounded-lg bg-slate-100 p-3"><div className="text-slate-600">Seguradora</div><strong className="text-base">{money(split.insurer)}</strong></div>
+        <div className="rounded-xl bg-white ring-1 ring-slate-200 p-3"><div className="text-slate-600">Cliente</div><strong className="text-base">{money(split.customer)}</strong></div>
+        <div className="rounded-xl bg-white ring-1 ring-slate-200 p-3"><div className="text-slate-600">Seguradora</div><strong className="text-base">{money(split.insurer)}</strong></div>
       </div>
     </div>
   )

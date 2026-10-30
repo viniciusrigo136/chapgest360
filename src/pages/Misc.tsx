@@ -1,8 +1,9 @@
 import { askConfirm } from '../lib/confirm'
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { BookOpen, Car, Plus } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { KIND_LABEL } from '../components/ItemsEditor'
-import { Button, Card, Empty, ErrorBox, Field, Input, Loading, MoneyInput, PageHeader, Select, Sheet } from '../components/ui'
+import { Button, Empty, ErrorBox, Field, Input, Loading, MoneyInput, PageHeader, Select, Sheet } from '../components/ui'
 import { useAction, useApp, useLoad } from '../lib/app'
 import { db } from '../lib/db'
 import { REGIONS, UNITS } from '../lib/defaults'
@@ -18,11 +19,11 @@ export function Catalog() {
   const list = data.filter((c) => `${c.description} ${c.region ?? ''}`.toLowerCase().includes(q.toLowerCase())).sort((a, b) => a.description.localeCompare(b.description))
   return (
     <div>
-      <PageHeader title="Catálogo" back="/mais" actions={<Button onClick={() => setEdit({ kind: 'service', unit: 'serv', price: 0, description: '' })}>+ Novo</Button>} />
-      <p className="mb-3 text-sm text-slate-600">Serviços e peças com preço sugerido, para montar orçamentos com um toque.</p>
+      <PageHeader title="Serviços com preço" back="/config" actions={<Button icon={Plus} className="min-h-11" onClick={() => setEdit({ kind: 'service', unit: 'serv', price: 0, description: '' })}>Novo</Button>} />
+      <p className="mb-3 text-sm text-slate-600">Ao digitar no orçamento, esses serviços aparecem como sugestão já com o preço. Os serviços que você usa nos orçamentos também aparecem sozinhos.</p>
       <Input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar" className="mb-3" />
-      {list.length === 0 ? <Empty title="Catálogo vazio" text="Ex.: Pintura de para-choque, Polimento completo, Martelinho de ouro." /> : (
-        <ul className="divide-y divide-slate-100 rounded-xl border border-slate-200 bg-white">
+      {list.length === 0 ? <Empty icon={BookOpen} title="Nenhum serviço cadastrado" text="Ex.: Pintura de para-choque, Polimento completo, Martelinho de ouro." /> : (
+        <ul className="divide-y divide-slate-100 overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200/70">
           {list.map((c) => (
             <li key={c.id}>
               <button type="button" onClick={() => setEdit(c)} className="flex w-full items-center justify-between px-4 py-3 text-left active:bg-slate-50">
@@ -64,36 +65,6 @@ export function Catalog() {
   )
 }
 
-export function More() {
-  const { session, reloadSession } = useApp()
-  const links = [
-    ['/clientes', 'Clientes e veículos'],
-    ['/producao', 'Produção (por etapa)'],
-    ['/catalogo', 'Catálogo de serviços'],
-    ['/config', 'Configurações da empresa'],
-  ]
-  return (
-    <div className="space-y-4">
-      <PageHeader title="Mais" />
-      <ul className="divide-y divide-slate-100 rounded-xl border border-slate-200 bg-white">
-        {links.map(([to, label]) => (
-          <li key={to}><Link to={to} className="flex min-h-14 items-center justify-between px-4 font-medium active:bg-slate-50">{label}<span className="text-slate-400">›</span></Link></li>
-        ))}
-      </ul>
-      <Card className="text-sm text-slate-600">
-        {db.mode === 'local' ? (
-          <p><strong>Modo local:</strong> os dados ficam só neste navegador. Para usar no celular e no computador ao mesmo tempo, configure a nuvem (veja o README).</p>
-        ) : (
-          <div className="flex items-center justify-between gap-2">
-            <span>Conectado como {session?.email}</span>
-            <Button variant="secondary" onClick={async () => { await db.signOut(); await reloadSession() }}>Sair</Button>
-          </div>
-        )}
-      </Card>
-    </div>
-  )
-}
-
 export function Login() {
   const { reloadSession } = useApp()
   const [mode, setMode] = useState<'in' | 'up'>('in')
@@ -123,14 +94,15 @@ export function Login() {
   }
   return (
     <div className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center gap-4 p-6">
-      <h1 className="text-center text-3xl font-extrabold text-blue-800">Lataria</h1>
-      <p className="text-center text-sm text-slate-600">Gestão para funilaria e pintura</p>
+      <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-lg shadow-brand-600/30"><Car size={34} /></span>
+      <h1 className="text-center text-3xl font-extrabold tracking-tight">Lataria</h1>
+      <p className="-mt-2 text-center text-sm text-slate-500">Orçamentos e serviços de funilaria e pintura, direto do celular</p>
       <Field label="E-mail"><Input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
       <Field label="Senha"><Input type="password" autoComplete={mode === 'in' ? 'current-password' : 'new-password'} value={pw} onChange={(e) => setPw(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && submit()} /></Field>
       {err && <ErrorBox message={err} />}
       {info && <p className="rounded-lg bg-green-50 p-3 text-sm text-green-800">{info}</p>}
       <Button disabled={busy || !email || pw.length < 6} onClick={submit}>{mode === 'in' ? 'Entrar' : 'Criar conta'}</Button>
-      <button type="button" className="text-sm font-semibold text-blue-700" onClick={() => setMode(mode === 'in' ? 'up' : 'in')}>
+      <button type="button" className="text-sm font-semibold text-brand-700" onClick={() => setMode(mode === 'in' ? 'up' : 'in')}>
         {mode === 'in' ? 'Ainda não tem conta? Criar conta' : 'Já tenho conta'}
       </button>
     </div>
@@ -144,7 +116,8 @@ export function CreateOrganization() {
   const [err, setErr] = useState('')
   return (
     <div className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center gap-4 p-6">
-      <h1 className="text-2xl font-bold">Qual o nome da sua oficina?</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">Qual o nome da sua oficina?</h1>
+      <p className="-mt-2 text-sm text-slate-500">Ele aparece nos orçamentos e na página que o cliente recebe.</p>
       <Input autoFocus value={name} onChange={(e) => setName(e.target.value)} />
       {err && <ErrorBox message={err} />}
       <Button disabled={name.trim().length < 2} onClick={async () => {

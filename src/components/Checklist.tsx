@@ -1,3 +1,4 @@
+import { PenLine } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { CHECKLIST_ITEMS, DAMAGE_TYPES } from '../lib/defaults'
 import { digits } from '../lib/format'
@@ -62,7 +63,7 @@ export function ChecklistEditor({ value, onChange }: { value: Checklist; onChang
           <div className="flex gap-1">
             {FUEL.map((f, i) => (
               <button key={f} type="button" onClick={() => set('fuel', i)}
-                className={`min-h-11 flex-1 rounded border text-xs font-semibold ${value.fuel === i ? 'border-blue-700 bg-blue-700 text-white' : 'border-slate-300'}`}>
+                className={`min-h-11 flex-1 rounded border text-xs font-semibold ${value.fuel === i ? 'border-brand-700 bg-brand-700 text-white' : 'border-slate-300'}`}>
                 {f}
               </button>
             ))}
@@ -152,7 +153,7 @@ export function SignatureField({ label, value, name, onChange }: { label: string
           </div>
         </div>
       ) : (
-        <Button variant="secondary" className="w-full" onClick={() => setOpen(true)}>✍️ Colher assinatura</Button>
+        <Button variant="secondary" icon={PenLine} className="w-full" onClick={() => setOpen(true)}>Colher assinatura</Button>
       )}
       {open && <SignatureSheet onClose={() => setOpen(false)} onSave={(d, n) => { onChange(d, n); setOpen(false) }} />}
     </div>

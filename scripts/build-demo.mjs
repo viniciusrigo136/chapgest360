@@ -16,11 +16,13 @@ await build({
 const assets = readdirSync('dist-demo/assets')
 const css = readFileSync(join('dist-demo/assets', assets.find((f) => f.endsWith('.css'))), 'utf8')
 const js = readFileSync(join('dist-demo/assets', assets.find((f) => f.endsWith('.js'))), 'utf8').replace(/<\/script/gi, '<\\/script')
+const fonts = readFileSync('index.html', 'utf8').match(/<link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com[^>]+>/)?.[0] ?? ''
 const icon = 'data:image/svg+xml;base64,' + Buffer.from(readFileSync('public/icon.svg')).toString('base64')
 writeFileSync(
   out,
   `<title>Lataria</title>
 <link rel="icon" href="${icon}">
+${fonts}
 <style>${css}</style>
 <div id="root"></div>
 <script type="module">${js}</script>

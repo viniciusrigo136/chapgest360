@@ -1,3 +1,4 @@
+import { Camera, ImagePlus } from 'lucide-react'
 import { askConfirm } from '../lib/confirm'
 import { useEffect, useRef, useState } from 'react'
 import { useApp, useLoad } from '../lib/app'
@@ -66,8 +67,8 @@ export function PhotoManager({ parentType, parentId, vehicleId, stages, defaultS
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-2 gap-2">
-        <Button variant="secondary" onClick={() => camRef.current?.click()}>📷 Tirar foto</Button>
-        <Button variant="secondary" onClick={() => galRef.current?.click()}>🖼️ Galeria</Button>
+        <Button variant="primary" icon={Camera} onClick={() => camRef.current?.click()}>Tirar foto</Button>
+        <Button variant="secondary" icon={ImagePlus} onClick={() => galRef.current?.click()}>Galeria</Button>
       </div>
       <input ref={camRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => { addFiles(e.target.files); e.target.value = '' }} />
       <input ref={galRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => { addFiles(e.target.files); e.target.value = '' }} />
@@ -78,7 +79,7 @@ export function PhotoManager({ parentType, parentId, vehicleId, stages, defaultS
             <li key={p.id} className="flex items-center justify-between rounded bg-slate-100 px-3 py-2">
               <span className="truncate">{p.status === 'enviando' ? 'Enviando… ' : 'Falhou: '}{p.name}</span>
               {p.status === 'erro' && (
-                <button type="button" className="font-semibold text-blue-700" onClick={async () => { await uploadOne(p, photos?.length ?? 0); reload() }}>
+                <button type="button" className="font-semibold text-brand-700" onClick={async () => { await uploadOne(p, photos?.length ?? 0); reload() }}>
                   tentar de novo
                 </button>
               )}
@@ -90,7 +91,7 @@ export function PhotoManager({ parentType, parentId, vehicleId, stages, defaultS
       {photos && photos.length > 0 ? (
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
           {photos.map((p) => (
-            <button key={p.id} type="button" onClick={() => setOpen(p)} className="relative aspect-square overflow-hidden rounded-lg bg-slate-100">
+            <button key={p.id} type="button" onClick={() => setOpen(p)} className="relative aspect-square overflow-hidden rounded-xl bg-slate-100">
               <Thumb path={p.path} className="h-full w-full" />
               {!p.is_public && <span className="absolute left-1 top-1 rounded bg-slate-900/80 px-1.5 text-[10px] font-bold text-white">INTERNA</span>}
               {p.stage && stages && <span className="absolute inset-x-0 bottom-0 truncate bg-black/50 px-1 text-[10px] text-white">{stages.find((s) => s.key === p.stage)?.name}</span>}
@@ -98,7 +99,7 @@ export function PhotoManager({ parentType, parentId, vehicleId, stages, defaultS
           ))}
         </div>
       ) : (
-        photos && pending.length === 0 && <p className="text-sm text-slate-500">Nenhuma foto ainda.</p>
+        photos && pending.length === 0 && <p className="text-sm text-slate-500">Fotos ajudam o cliente a entender o serviço e a aprovar mais rápido.</p>
       )}
 
       {open && <PhotoSheet photo={open} stages={stages} all={photos ?? []} onClose={() => { setOpen(null); reload(); refresh() }} />}

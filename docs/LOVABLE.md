@@ -40,7 +40,8 @@ Em poucos segundos, o Lovable mostra o código novo.
 Este projeto foi substituído pelo código do sistema "Lataria" (gestão para funilaria e pintura), enviado pelo GitHub. O código já está completo e testado. NÃO reescreva, NÃO reorganize pastas, NÃO troque bibliotecas e NÃO converta para shadcn/ui.
 
 Detalhes importantes do projeto:
-- Vite 5 + React 18 + TypeScript + Tailwind CSS v4 (via @tailwindcss/vite, sem tailwind.config e sem postcss.config). Não crie tailwind.config.ts nem postcss.config.js.
+- Vite 5 + React 18 + TypeScript + Tailwind CSS v4 (via @tailwindcss/vite, sem tailwind.config e sem postcss.config; as cores e fontes ficam no bloco @theme de src/index.css). Não crie tailwind.config.ts nem postcss.config.js.
+- Ícones: lucide-react. Fontes: Plus Jakarta Sans e Barlow Condensed (Google Fonts, no index.html).
 - O acesso ao banco fica em src/lib/cloudBackend.ts e é escolhido em src/lib/db.ts pelas variáveis VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY. Não crie outra camada de dados e não use src/integrations/supabase no lugar dela.
 - Sem essas variáveis o app roda em "modo local" (IndexedDB), com a faixa amarela "Modo local de teste".
 - Rotas com react-router (BrowserRouter). A rota pública do cliente é /c/:token e não exige login.
