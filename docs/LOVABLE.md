@@ -1,5 +1,11 @@
 # Como colocar o Lataria no Lovable (com Lovable Cloud)
 
+O código está em **https://github.com/viniciusrigo136/chapgest360** (branch `main`).
+
+**Caminho mais simples:** se a sua tela do Lovable tiver a opção de **importar um repositório do GitHub**, escolha `chapgest360` e pule para o Passo 3. Se não tiver, siga os passos abaixo.
+
+O prompt completo do banco, já com o SQL dentro, está em [`PROMPT_BANCO_LOVABLE.md`](PROMPT_BANCO_LOVABLE.md).
+
 O Lovable **não importa um repositório GitHub que já existe**: ao conectar o GitHub, ele sempre cria um repositório novo. Por isso a ordem é esta:
 
 1. Criar o projeto no Lovable e ativar o Lovable Cloud.
@@ -17,10 +23,18 @@ O Lovable **não importa um repositório GitHub que já existe**: ao conectar o 
 
 ## Passo 2 — Enviar o código para o repositório do Lovable
 
-Você precisa do Git instalado. No Windows, use o *Git Bash*. Dentro da pasta do projeto Lataria, rode:
+Você precisa do Git instalado. No Windows, use o *Git Bash*. Baixe o projeto e envie para o repositório que o Lovable criou:
 
 ```bash
-bash scripts/enviar-para-lovable.sh https://github.com/seu-usuario/lataria.git
+git clone https://github.com/viniciusrigo136/chapgest360.git
+```
+
+```bash
+cd chapgest360
+```
+
+```bash
+bash scripts/enviar-para-lovable.sh https://github.com/viniciusrigo136/NOME-DO-REPO-DO-LOVABLE.git
 ```
 
 O script:
@@ -50,6 +64,8 @@ Tarefa: apenas instale as dependências do package.json, confirme que o preview 
 ```
 
 ## Passo 4 — Prompt 2: criar o banco no Lovable Cloud
+
+Use a versão completa, com o SQL dentro, de [`PROMPT_BANCO_LOVABLE.md`](PROMPT_BANCO_LOVABLE.md). A versão abaixo lê o arquivo do repositório.
 
 ```
 Configure o banco de dados do Lovable Cloud para este projeto usando EXATAMENTE o SQL do arquivo supabase/migrations/20261030000000_lataria_init.sql, sem alterar nada.
