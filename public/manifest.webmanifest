@@ -1,0 +1,10 @@
+{
+  "name": "Lataria — Funilaria e Pintura",
+  "short_name": "Lataria",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f1f5f9",
+  "theme_color": "#1d4ed8",
+  "lang": "pt-BR",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

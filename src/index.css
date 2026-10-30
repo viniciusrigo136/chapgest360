@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+html { -webkit-tap-highlight-color: transparent; }
+body { background: #f1f5f9; color: #0f172a; }
+summary { min-height: 1.75rem; }
+
+/* Folha A4: 210 × 297 mm, margens de 12 mm. Na tela é reduzida com zoom para caber no celular. */
+.a4 {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 12mm;
+  background: #fff;
+  box-shadow: 0 1px 6px rgb(0 0 0 / 0.15);
+  zoom: var(--z, 1);
+  font-family: Arial, Helvetica, sans-serif;
+  color: #0f172a;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.a4 thead { display: table-header-group; }
+.avoid-break { break-inside: avoid; page-break-inside: avoid; }
+.a4 h3 { break-after: avoid; page-break-after: avoid; }
+
+@page {
+  size: A4 portrait;
+  margin: 12mm;
+  @bottom-right { content: "Página " counter(page) " de " counter(pages); font-size: 8pt; color: #64748b; }
+}
+
+@media print {
+  body { background: #fff; }
+  .a4 { width: auto; min-height: 0; padding: 0; box-shadow: none; zoom: 1 !important; }
+  .app-chrome { display: none !important; }
+}

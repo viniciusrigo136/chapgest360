@@ -1,0 +1,35 @@
+{
+  "name": "lataria",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "test:sql": "bash tests/sql/run.sh",
+    "test:e2e": "node tests/e2e.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.118.0",
+    "idb": "^8.0.4",
+    "qrcode": "^1.5.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21",
+    "vitest": "^2.1.9"
+  },
+  "private": true,
+  "type": "module"
+}
