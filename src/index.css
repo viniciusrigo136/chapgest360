@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Modo escuro: classe "dark" no <html> (botão sol/lua). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Oficina: azul de carroceria como cor principal, neutros levemente azulados, fonte arredondada e legível. */
 @theme {
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -14,8 +17,69 @@
   --color-brand-800: #172f7d;
   --color-ink: #13203a;
   --color-page: #f2f4f8;
+  --color-card: #ffffff;
+  --color-panel: #13203a;
+  --color-wa-soft: #e7f7ec;
   --color-wa: #1fa855;
   --color-wa-dark: #178a45;
+  /* Gráficos (validados para daltonismo no claro e no escuro) */
+  --color-chart-1: #1f47c7;
+  --color-chart-2: #d97706;
+  --color-chart-3: #0d9488;
+}
+
+/*
+ * No escuro só redefinimos as variáveis de cor: as mesmas classes (bg-card, text-slate-500,
+ * ring-slate-200, bg-brand-50...) passam a usar os tons escuros sem duplicar o código.
+ */
+.dark {
+  color-scheme: dark;
+  --color-page: #0b1120;
+  --color-card: #141c2e;
+  --color-panel: #1c2742;
+  --color-ink: #e8edf6;
+  --color-wa-soft: #11301f;
+  --color-chart-1: #5b7ff0;
+  --color-chart-2: #c97a08;
+  --color-chart-3: #0f9f8f;
+  --color-slate-50: #1a2335;
+  --color-slate-100: #202b41;
+  --color-slate-200: #2b3852;
+  --color-slate-300: #3b4966;
+  --color-slate-400: #6c7b98;
+  --color-slate-500: #95a3bd;
+  --color-slate-600: #b5c1d6;
+  --color-slate-700: #cbd5e4;
+  --color-slate-800: #dce3ee;
+  --color-slate-900: #eef2f8;
+  --color-brand-50: #172447;
+  --color-brand-100: #1d2e5b;
+  --color-brand-200: #2a4182;
+  --color-brand-300: #3d5ab0;
+  --color-brand-500: #6b8cf7;
+  --color-brand-600: #3f6cf0;
+  --color-brand-700: #a3b9ff;
+  --color-brand-800: #c2d1ff;
+  --color-amber-50: #2a2112;
+  --color-amber-100: #3a2c10;
+  --color-amber-700: #f3c062;
+  --color-amber-800: #f6cd7c;
+  --color-amber-900: #f9da98;
+  --color-red-50: #2c1518;
+  --color-red-100: #3d1a1f;
+  --color-red-200: #5b2229;
+  --color-red-300: #7f2a33;
+  --color-red-600: #f87171;
+  --color-red-700: #fca5a5;
+  --color-red-800: #fecaca;
+  --color-red-900: #fecaca;
+  --color-emerald-50: #0f2a20;
+  --color-emerald-700: #6ee7b7;
+  --color-emerald-800: #a7f3d0;
+  --color-green-100: #123222;
+  --color-green-900: #bbf7d0;
+  --color-orange-100: #3a2410;
+  --color-orange-900: #fdd8a8;
 }
 
 html { -webkit-tap-highlight-color: transparent; }

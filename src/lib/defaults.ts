@@ -71,3 +71,39 @@ export const QUOTE_STATUS = {
 } as const
 
 export const COST_CATEGORIES = { tinta: 'Tintas', material: 'Materiais', peca: 'Peças', terceiro: 'Terceirizados', horas: 'Horas próprias', outro: 'Outros' } as const
+
+/** Marcas mais comuns no Brasil e alguns modelos, para sugerir no cadastro do carro. */
+export const VEHICLE_MODELS: Record<string, string[]> = {
+  Chevrolet: ['Onix', 'Onix Plus', 'Prisma', 'Celta', 'Corsa', 'Cruze', 'Tracker', 'S10', 'Spin', 'Montana', 'Cobalt', 'Agile'],
+  Fiat: ['Uno', 'Mobi', 'Argo', 'Cronos', 'Palio', 'Siena', 'Strada', 'Toro', 'Pulse', 'Fastback', 'Fiorino', 'Doblò', 'Punto'],
+  Volkswagen: ['Gol', 'Voyage', 'Fox', 'Polo', 'Virtus', 'T-Cross', 'Nivus', 'Saveiro', 'Amarok', 'Jetta', 'Up!', 'Taos'],
+  Ford: ['Ka', 'Fiesta', 'Focus', 'EcoSport', 'Ranger', 'Territory', 'Maverick'],
+  Toyota: ['Corolla', 'Corolla Cross', 'Yaris', 'Etios', 'Hilux', 'SW4', 'RAV4'],
+  Hyundai: ['HB20', 'HB20S', 'Creta', 'Tucson', 'ix35'],
+  Honda: ['Civic', 'City', 'Fit', 'HR-V', 'WR-V', 'CR-V'],
+  Renault: ['Kwid', 'Sandero', 'Logan', 'Duster', 'Captur', 'Oroch', 'Master'],
+  Nissan: ['March', 'Versa', 'Kicks', 'Sentra', 'Frontier'],
+  Jeep: ['Renegade', 'Compass', 'Commander'],
+  Peugeot: ['208', '2008', '308', '3008', 'Partner'],
+  Citroën: ['C3', 'C4 Cactus', 'Aircross', 'Jumpy'],
+  Mitsubishi: ['L200', 'Pajero', 'ASX', 'Outlander'],
+  'Caoa Chery': ['Tiggo 5x', 'Tiggo 7', 'Tiggo 8', 'Arrizo 6'],
+  BYD: ['Dolphin', 'Dolphin Mini', 'Song Plus', 'Seal'],
+  Kia: ['Sportage', 'Cerato', 'Picanto', 'Sorento'],
+  'Mercedes-Benz': ['Classe A', 'Classe C', 'GLA', 'Sprinter', 'Accelo'],
+  BMW: ['Série 3', 'X1', 'X3', '320i'],
+  Audi: ['A3', 'A4', 'Q3', 'Q5'],
+  Volvo: ['XC40', 'XC60', 'FH'],
+  Scania: ['R 450', 'P 360', 'G 410'],
+}
+export const VEHICLE_BRANDS = Object.keys(VEHICLE_MODELS)
+export const VEHICLE_COLORS = ['Branco', 'Preto', 'Prata', 'Cinza', 'Vermelho', 'Azul', 'Verde', 'Amarelo', 'Laranja', 'Marrom', 'Bege', 'Dourado', 'Vinho', 'Grafite']
+export const FUELS = ['Flex', 'Gasolina', 'Etanol', 'Diesel', 'GNV', 'Híbrido', 'Elétrico']
+
+/** Junta apelidos de marca ("vw", "gm", "chevrolet") no nome da lista. */
+export function normalizeBrand(b?: string) {
+  const t = (b ?? '').trim().toLowerCase()
+  if (!t) return ''
+  const alias: Record<string, string> = { vw: 'Volkswagen', gm: 'Chevrolet', chevy: 'Chevrolet', mercedes: 'Mercedes-Benz', citroen: 'Citroën', chery: 'Caoa Chery' }
+  return alias[t] ?? VEHICLE_BRANDS.find((x) => x.toLowerCase().startsWith(t)) ?? ''
+}

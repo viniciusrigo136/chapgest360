@@ -23,7 +23,7 @@ export function Catalog() {
       <p className="mb-3 text-sm text-slate-600">Ao digitar no orçamento, esses serviços aparecem como sugestão já com o preço. Os serviços que você usa nos orçamentos também aparecem sozinhos.</p>
       <Input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar" className="mb-3" />
       {list.length === 0 ? <Empty icon={BookOpen} title="Nenhum serviço cadastrado" text="Ex.: Pintura de para-choque, Polimento completo, Martelinho de ouro." /> : (
-        <ul className="divide-y divide-slate-100 overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200/70">
+        <ul className="divide-y divide-slate-100 overflow-hidden rounded-2xl bg-card ring-1 ring-slate-200/70">
           {list.map((c) => (
             <li key={c.id}>
               <button type="button" onClick={() => setEdit(c)} className="flex w-full items-center justify-between px-4 py-3 text-left active:bg-slate-50">

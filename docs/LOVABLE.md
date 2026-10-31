@@ -55,6 +55,7 @@ Este projeto foi substituído pelo código do sistema "Lataria" (gestão para fu
 
 Detalhes importantes do projeto:
 - Vite 5 + React 18 + TypeScript + Tailwind CSS v4 (via @tailwindcss/vite, sem tailwind.config e sem postcss.config; as cores e fontes ficam no bloco @theme de src/index.css). Não crie tailwind.config.ts nem postcss.config.js.
+- Modo escuro: classe "dark" no <html>, cores em variáveis no src/index.css. Não converta para outro sistema de temas.
 - Ícones: lucide-react. Fontes: Plus Jakarta Sans e Barlow Condensed (Google Fonts, no index.html).
 - O acesso ao banco fica em src/lib/cloudBackend.ts e é escolhido em src/lib/db.ts pelas variáveis VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY. Não crie outra camada de dados e não use src/integrations/supabase no lugar dela.
 - Sem essas variáveis o app roda em "modo local" (IndexedDB), com a faixa amarela "Modo local de teste".
@@ -68,7 +69,7 @@ Tarefa: apenas instale as dependências do package.json, confirme que o preview 
 Use a versão completa, com o SQL dentro, de [`PROMPT_BANCO_LOVABLE.md`](PROMPT_BANCO_LOVABLE.md). A versão abaixo lê o arquivo do repositório.
 
 ```
-Configure o banco de dados do Lovable Cloud para este projeto usando EXATAMENTE o SQL do arquivo supabase/migrations/20261030000000_lataria_init.sql, sem alterar nada.
+Configure o banco de dados do Lovable Cloud para este projeto usando EXATAMENTE o SQL dos arquivos de supabase/migrations/ (20261030000000_lataria_init.sql e depois 20261031000000_lataria_clientes_veiculos.sql), sem alterar nada.
 
 1. Execute esse arquivo como uma migração (ele cria as tabelas organizations, memberships, counters, customers, vehicles, quotes, work_orders, stage_events, payments, photos, catalog_items e costs; os triggers de numeração, totais e proteção de pagamentos; as políticas RLS; as funções create_organization, public_document e public_decision; e o bucket privado de Storage "photos" com suas políticas). Não crie tabelas extras e não mude nomes de colunas: o frontend depende deles.
 2. Confirme que o arquivo .env tem VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY do projeto Cloud. O código lê exatamente esses nomes em src/lib/db.ts.

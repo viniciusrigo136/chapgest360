@@ -23,10 +23,19 @@ function useSuggestions() {
   return data ?? []
 }
 
-export function ItemsEditor({ items, onChange }: { items: DocItem[]; onChange: (items: DocItem[]) => void }) {
+export interface ItemDraft { desc: string; price: number }
+export const emptyDraft: ItemDraft = { desc: '', price: 0 }
+
+/** Item que está digitado na linha de adicionar (conta no total e é salvo junto). */
+export function draftToItem(d: ItemDraft): DocItem | null {
+  const desc = d.desc.trim()
+  return desc ? { id: uid(), kind: 'service', description: desc, qty: 1, unit: 'serv', unit_price: d.price } : null
+}
+
+export function ItemsEditor({ items, onChange, draft, onDraft }: { items: DocItem[]; onChange: (items: DocItem[]) => void; draft: ItemDraft; onDraft: (d: ItemDraft) => void }) {
   const [editing, setEditing] = useState<DocItem | null>(null)
-  const [desc, setDesc] = useState('')
-  const [price, setPrice] = useState(0)
+  const { desc, price } = draft
+  const setPrice = (v: number) => onDraft({ ...draft, price: v })
   const suggestions = useSuggestions()
   const byName = useMemo(() => new Map(suggestions.map((s) => [s.description.toLowerCase(), s])), [suggestions])
 
@@ -35,8 +44,7 @@ export function ItemsEditor({ items, onChange }: { items: DocItem[]; onChange: (
     if (!d) return
     const sug = byName.get(d.toLowerCase())
     onChange([...items, { id: uid(), kind: sug?.kind ?? 'service', description: d, region: sug?.region, qty: 1, unit: sug?.unit ?? 'serv', unit_price: price }])
-    setDesc('')
-    setPrice(0)
+    onDraft(emptyDraft)
   }
   const save = (it: DocItem) => {
     onChange(items.map((x) => (x.id === it.id ? it : x)))
@@ -49,7 +57,7 @@ export function ItemsEditor({ items, onChange }: { items: DocItem[]; onChange: (
         <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl ring-1 ring-slate-200">
           {items.map((it) => (
             <li key={it.id}>
-              <button type="button" className="flex w-full items-center gap-3 bg-white px-3.5 py-3 text-left active:bg-slate-50" onClick={() => setEditing(it)}>
+              <button type="button" className="flex w-full items-center gap-3 bg-card px-3.5 py-3 text-left active:bg-slate-50" onClick={() => setEditing(it)}>
                 <span className="min-w-0 flex-1">
                   <span className="block font-semibold leading-snug">{it.description}</span>
                   {(it.qty !== 1 || it.region) && (
@@ -70,9 +78,8 @@ export function ItemsEditor({ items, onChange }: { items: DocItem[]; onChange: (
             list="item-suggestions"
             value={desc}
             onChange={(e) => {
-              setDesc(e.target.value)
               const s = byName.get(e.target.value.toLowerCase())
-              if (s) setPrice(s.price)
+              onDraft({ desc: e.target.value, price: s ? s.price : price })
             }}
             onKeyDown={(e) => e.key === 'Enter' && add()}
             placeholder={items.length ? 'Outro serviço ou peça' : 'Ex.: Pintura do para-choque'}
@@ -80,6 +87,7 @@ export function ItemsEditor({ items, onChange }: { items: DocItem[]; onChange: (
           <MoneyInput aria-label="Valor do item" value={price} onChange={setPrice} onKeyDown={(e) => e.key === 'Enter' && add()} />
         </div>
         <Button className="mt-2 w-full" variant="secondary" icon={Plus} disabled={!desc.trim()} onClick={add}>Adicionar</Button>
+        {desc.trim() && <p className="mt-2 text-xs text-slate-500">Já está somando no total. Toque em Adicionar para colocar outro serviço.</p>}
         <datalist id="item-suggestions">
           {suggestions.map((s) => <option key={s.description} value={s.description}>{money(s.price)}</option>)}
         </datalist>
@@ -111,7 +119,7 @@ function ItemSheet({ item, onClose, onSave, onRemove }: { item: DocItem; onClose
           <div className="grid grid-cols-3 gap-2">
             {(Object.keys(KIND_LABEL) as ItemKind[]).map((k) => (
               <button key={k} type="button" onClick={() => set('kind', k)}
-                className={`min-h-11 rounded-xl text-sm font-semibold ring-1 ${it.kind === k ? 'bg-brand-50 text-brand-700 ring-brand-500' : 'bg-white ring-slate-200'}`}>
+                className={`min-h-11 rounded-xl text-sm font-semibold ring-1 ${it.kind === k ? 'bg-brand-50 text-brand-700 ring-brand-500' : 'bg-card ring-slate-200'}`}>
                 {KIND_LABEL[k]}
               </button>
             ))}

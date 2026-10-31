@@ -3,6 +3,7 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { askConfirm } from '../lib/confirm'
 import { Thumb } from '../components/PhotoManager'
+import { ThemeToggle } from '../components/ThemeToggle'
 import { Button, Card, Collapsible, Field, Input, Loading, MoneyInput, PageHeader, TextArea } from '../components/ui'
 import { useAction, useApp } from '../lib/app'
 import { db, filePath } from '../lib/db'
@@ -49,7 +50,7 @@ export default function Settings() {
   const setStage = (i: number, patch: Partial<Stage>) => set('stages', s.stages.map((st, j) => (j === i ? { ...st, ...patch } : st)))
 
   return (
-    <div className="space-y-3 pb-28">
+    <div className="mx-auto max-w-3xl space-y-3 pb-28">
       <PageHeader title="Configurações" subtitle="Aparece nos orçamentos, serviços e na página do cliente" back="/" />
 
       <Collapsible title="Sua oficina" subtitle="Nome, logo, WhatsApp e PIX" icon={Building2} defaultOpen>
@@ -150,11 +151,16 @@ export default function Settings() {
         <Button variant="secondary" icon={Plus} onClick={() => set('stages', [...s.stages.slice(0, -2), { key: `etapa_${Date.now()}`, name: 'Nova etapa', color: '#64748b', public: true }, ...s.stages.slice(-2)])}>Etapa</Button>
       </Collapsible>
 
-      <Link to="/catalogo" className="flex min-h-14 items-center gap-3 rounded-2xl bg-white px-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70 active:bg-slate-50">
+      <Link to="/catalogo" className="flex min-h-14 items-center gap-3 rounded-2xl bg-card px-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70 active:bg-slate-50">
         <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><BookOpen size={18} /></span>
         <span className="flex-1"><span className="block text-[15px] font-bold">Serviços com preço</span><span className="block text-xs text-slate-500">Aparecem como sugestão no orçamento</span></span>
         <ChevronRight size={20} className="text-slate-400" />
       </Link>
+
+      <div className="flex items-center justify-between gap-3 rounded-2xl bg-card px-4 py-3 ring-1 ring-slate-200/70">
+        <span><span className="block text-[15px] font-bold">Aparência</span><span className="block text-xs text-slate-500">Modo claro ou escuro</span></span>
+        <ThemeToggle withLabel />
+      </div>
 
       <Card className="text-sm text-slate-600">
         {db.mode === 'local' ? (
@@ -167,7 +173,7 @@ export default function Settings() {
         )}
       </Card>
 
-      <div className="fixed inset-x-0 bottom-16 z-30 border-t border-slate-200 bg-white/95 p-3 backdrop-blur lg:bottom-0 lg:left-60">
+      <div className="fixed inset-x-0 bottom-16 z-30 border-t border-slate-200 bg-card/95 p-3 backdrop-blur lg:bottom-0 lg:left-64">
         <Button className="mx-auto flex w-full max-w-xl lg:max-w-3xl" disabled={busy || !s.trade_name.trim()} onClick={() => run(() => saveSettings(s), 'Configurações salvas')}>
           Salvar configurações
         </Button>

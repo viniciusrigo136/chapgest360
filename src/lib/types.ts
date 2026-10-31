@@ -69,6 +69,8 @@ export interface Customer extends Base {
   document?: string
   zip?: string
   address?: string
+  city?: string
+  birth_date?: string | null
   source?: string
   notes?: string
 }
@@ -83,6 +85,8 @@ export interface Vehicle extends Base {
   paint_code?: string
   vin?: string
   km?: number | null
+  fuel?: string
+  renavam?: string
   notes?: string
 }
 

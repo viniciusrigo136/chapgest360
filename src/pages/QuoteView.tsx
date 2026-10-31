@@ -45,7 +45,7 @@ export default function QuoteView() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="mx-auto max-w-3xl space-y-4">
       <PageHeader title={`Orçamento ${q.number.split('-').pop()}`} subtitle={`${q.number} • ${date(q.created_at)}`} back="/orcamentos" actions={<Badge className={st.cls}>{st.label}</Badge>} />
       {q.archived_at && <ErrorBox message="Este orçamento está arquivado." />}
 

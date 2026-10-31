@@ -34,6 +34,16 @@ export default function PrintDoc() {
   }, [kind, id])
   const [loaded, setLoaded] = useState(0)
 
+  // A folha A4 sempre em modo claro (impressão e PDF), mesmo com o app no escuro.
+  useEffect(() => {
+    const el = document.documentElement
+    const wasDark = el.classList.contains('dark')
+    el.classList.remove('dark')
+    return () => {
+      if (wasDark) el.classList.add('dark')
+    }
+  }, [])
+
   useEffect(() => {
     if (!data) return
     const prev = document.title
@@ -50,7 +60,7 @@ export default function PrintDoc() {
 
   return (
     <div className="print-root">
-      <div className="sticky top-0 z-20 flex gap-2 border-b border-slate-200 bg-white p-3 print:hidden">
+      <div className="sticky top-0 z-20 flex gap-2 border-b border-slate-200 bg-card p-3 print:hidden">
         <Button variant="secondary" onClick={() => nav(-1)}>‹ Voltar</Button>
         <Button className="flex-1" disabled={!ready} onClick={() => window.print()}>{ready ? 'Imprimir / Salvar PDF' : 'Carregando fotos…'}</Button>
       </div>

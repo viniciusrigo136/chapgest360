@@ -5,8 +5,10 @@ import { Layout } from './components/Layout'
 import { Loading } from './components/ui'
 import './index.css'
 import { AppProvider, useApp } from './lib/app'
+import { applyTheme } from './lib/theme'
 import { CustomerDetail, CustomerList, VehicleDetail } from './pages/Customers'
 import Dashboard from './pages/Dashboard'
+import Indicators from './pages/Indicators'
 import DocEditor from './pages/DocEditor'
 import { QuoteList, WorkOrderList } from './pages/Lists'
 import { Catalog, CreateOrganization, Login } from './pages/Misc'
@@ -39,6 +41,7 @@ function Private() {
         <Route path="clientes/:id" element={<CustomerDetail />} />
         <Route path="veiculos/:id" element={<VehicleDetail />} />
         <Route path="catalogo" element={<Catalog />} />
+        <Route path="indicadores" element={<Indicators />} />
         <Route path="config" element={<Settings />} />
         <Route path="mais" element={<Navigate to="/config" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
@@ -46,6 +49,8 @@ function Private() {
     </Routes>
   )
 }
+
+applyTheme()
 
 // Na demonstração (página única hospedada) as rotas ficam só em memória.
 const Router = import.meta.env.VITE_DEMO ? MemoryRouter : BrowserRouter

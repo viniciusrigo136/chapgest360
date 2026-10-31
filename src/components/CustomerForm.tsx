@@ -1,9 +1,13 @@
 import { useState } from 'react'
 import { useAction } from '../lib/app'
 import { db } from '../lib/db'
+import { FUELS, normalizeBrand, VEHICLE_BRANDS, VEHICLE_COLORS, VEHICLE_MODELS } from '../lib/defaults'
 import { digits, isValidDocument, isValidPlate, normalizePlate } from '../lib/format'
 import type { Customer, Vehicle } from '../lib/types'
-import { Button, Field, Input, TextArea } from './ui'
+import { Button, Field, Input, Select, TextArea } from './ui'
+
+export const SOURCES = ['Indicação', 'Instagram', 'Facebook', 'Google', 'Seguradora', 'Passou na frente', 'Cliente antigo']
+
 
 export function CustomerForm({ initial, onSaved }: { initial?: Customer; onSaved: (c: Customer) => void }) {
   const { busy, run } = useAction()
@@ -32,8 +36,11 @@ export function CustomerForm({ initial, onSaved }: { initial?: Customer; onSaved
           <Input inputMode="numeric" value={c.document ?? ''} onChange={(e) => set('document', e.target.value)} />
         </Field>
       </div>
-      <details className="rounded-lg border border-slate-200 p-3">
-        <summary className="cursor-pointer text-sm font-semibold text-slate-700">Mais dados (opcional)</summary>
+      <Field label="Cidade">
+        <Input value={c.city ?? ''} onChange={(e) => set('city', e.target.value)} />
+      </Field>
+      <details className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
+        <summary className="cursor-pointer text-sm font-semibold text-slate-600">Mais dados (opcional)</summary>
         <div className="mt-3 space-y-3">
           <Field label="WhatsApp (se diferente do telefone)">
             <Input type="tel" inputMode="tel" value={c.whatsapp ?? ''} onChange={(e) => set('whatsapp', e.target.value)} />
@@ -44,8 +51,12 @@ export function CustomerForm({ initial, onSaved }: { initial?: Customer; onSaved
           <Field label="Endereço">
             <Input value={c.address ?? ''} onChange={(e) => set('address', e.target.value)} />
           </Field>
+          <Field label="Data de nascimento">
+            <Input type="date" value={c.birth_date ?? ''} onChange={(e) => setC((x) => ({ ...x, birth_date: e.target.value || null }))} />
+          </Field>
           <Field label="Como conheceu a oficina">
-            <Input value={c.source ?? ''} onChange={(e) => set('source', e.target.value)} placeholder="Indicação, Instagram, seguradora…" />
+            <Input list="sources" value={c.source ?? ''} onChange={(e) => set('source', e.target.value)} placeholder="Indicação, Instagram, seguradora…" />
+            <datalist id="sources">{SOURCES.map((x) => <option key={x} value={x} />)}</datalist>
           </Field>
           <Field label="Observações">
             <TextArea value={c.notes ?? ''} onChange={(e) => set('notes', e.target.value)} />
@@ -79,13 +90,13 @@ export function VehicleForm({ customerId, initial, onSaved }: { customerId: stri
           <Input value={v.plate ?? ''} onChange={(e) => set('plate', normalizePlate(e.target.value))} autoCapitalize="characters" placeholder="ABC1D23" className="uppercase" />
         </Field>
         <Field label="Cor">
-          <Input value={v.color ?? ''} onChange={(e) => set('color', e.target.value)} />
+          <Input list="vehicle-colors" value={v.color ?? ''} onChange={(e) => set('color', e.target.value)} />
         </Field>
         <Field label="Marca">
-          <Input value={v.brand ?? ''} onChange={(e) => set('brand', e.target.value)} placeholder="VW, Fiat…" />
+          <Input list="vehicle-brands" value={v.brand ?? ''} onChange={(e) => set('brand', e.target.value)} placeholder="Fiat, VW…" />
         </Field>
         <Field label="Modelo">
-          <Input value={v.model ?? ''} onChange={(e) => set('model', e.target.value)} placeholder="Gol, Uno…" />
+          <Input list="vehicle-models" value={v.model ?? ''} onChange={(e) => set('model', e.target.value)} placeholder="Uno, Gol…" />
         </Field>
         <Field label="Ano/modelo">
           <Input inputMode="numeric" value={v.year ?? ''} onChange={(e) => set('year', e.target.value)} placeholder="2018/2019" />
@@ -94,9 +105,23 @@ export function VehicleForm({ customerId, initial, onSaved }: { customerId: stri
           <Input inputMode="numeric" value={v.km ?? ''} onChange={(e) => set('km', e.target.value ? Number(digits(e.target.value)) : null)} />
         </Field>
       </div>
-      <details className="rounded-lg border border-slate-200 p-3">
-        <summary className="cursor-pointer text-sm font-semibold text-slate-700">Mais dados (opcional)</summary>
+      <datalist id="vehicle-brands">{VEHICLE_BRANDS.map((b) => <option key={b} value={b} />)}</datalist>
+      <datalist id="vehicle-models">{(VEHICLE_MODELS[normalizeBrand(v.brand)] ?? []).map((m) => <option key={m} value={m} />)}</datalist>
+      <datalist id="vehicle-colors">{VEHICLE_COLORS.map((c) => <option key={c} value={c} />)}</datalist>
+      <details className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
+        <summary className="cursor-pointer text-sm font-semibold text-slate-600">Mais dados (opcional)</summary>
         <div className="mt-3 space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Combustível">
+              <Select value={v.fuel ?? ''} onChange={(e) => set('fuel', e.target.value)}>
+                <option value="">—</option>
+                {FUELS.map((f) => <option key={f}>{f}</option>)}
+              </Select>
+            </Field>
+            <Field label="Renavam">
+              <Input inputMode="numeric" value={v.renavam ?? ''} onChange={(e) => set('renavam', digits(e.target.value))} />
+            </Field>
+          </div>
           <Field label="Código da cor / tinta">
             <Input value={v.paint_code ?? ''} onChange={(e) => set('paint_code', e.target.value)} />
           </Field>
@@ -108,8 +133,8 @@ export function VehicleForm({ customerId, initial, onSaved }: { customerId: stri
           </Field>
         </div>
       </details>
-      <Button className="w-full" disabled={busy} onClick={async () => { const r = await run(save, 'Veículo salvo'); if (r) onSaved(r) }}>
-        Salvar veículo
+      <Button className="w-full" disabled={busy} onClick={async () => { const r = await run(save, 'Carro salvo'); if (r) onSaved(r) }}>
+        Salvar carro
       </Button>
     </div>
   )

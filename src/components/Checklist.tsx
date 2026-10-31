@@ -73,7 +73,7 @@ export function ChecklistEditor({ value, onChange }: { value: Checklist; onChang
 
       <div>
         <p className="mb-1 text-sm font-medium text-slate-700">Avarias existentes — toque na parte do carro</p>
-        <div className="rounded-lg border border-slate-200 bg-white py-2">
+        <div className="rounded-lg border border-slate-200 bg-card py-2">
           <p className="text-center text-xs text-slate-500">▲ frente</p>
           <CarDiagram damages={value.damages} onTap={setRegion} />
         </div>
@@ -145,7 +145,7 @@ export function SignatureField({ label, value, name, onChange }: { label: string
     <div>
       <p className="mb-1 text-sm font-medium text-slate-700">{label}</p>
       {value ? (
-        <div className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-2">
+        <div className="flex items-center gap-3 rounded-lg border border-slate-200 bg-card p-2">
           <img src={value} alt="Assinatura" className="h-16 flex-1 object-contain" />
           <div className="text-right text-sm">
             <div>{name}</div>
@@ -216,7 +216,7 @@ function SignatureSheet({ onClose, onSave }: { onClose: () => void; onSave: (dat
       <Field label="Nome de quem assina">
         <Input value={name} onChange={(e) => setName(e.target.value)} />
       </Field>
-      <canvas ref={ref} className="h-48 w-full touch-none rounded-lg border-2 border-dashed border-slate-300 bg-white" />
+      <canvas ref={ref} className="h-48 w-full touch-none rounded-lg border-2 border-dashed border-slate-300 bg-card" />
       <div className="grid grid-cols-2 gap-2">
         <Button variant="secondary" onClick={clear}>Limpar</Button>
         <Button disabled={!drawn || name.trim().length < 2} onClick={() => onSave(ref.current!.toDataURL('image/png'), name.trim())}>Confirmar</Button>

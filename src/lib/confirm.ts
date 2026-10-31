@@ -9,7 +9,7 @@ export function askConfirm(message: string, okLabel = 'Confirmar'): Promise<bool
     wrap.setAttribute('role', 'dialog')
     wrap.setAttribute('aria-modal', 'true')
     const box = document.createElement('div')
-    box.className = 'w-full max-w-sm space-y-4 rounded-2xl bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-xl'
+    box.className = 'w-full max-w-sm space-y-4 rounded-2xl bg-card p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-xl'
     const p = document.createElement('p')
     p.className = 'text-base text-slate-900'
     p.textContent = message
@@ -23,7 +23,7 @@ export function askConfirm(message: string, okLabel = 'Confirmar'): Promise<bool
       b.onclick = () => close(value)
       return b
     }
-    const cancel = btn('Cancelar', 'border border-slate-300 bg-white text-slate-800', false)
+    const cancel = btn('Cancelar', 'border border-slate-300 bg-card text-slate-800', false)
     const ok = btn(okLabel, 'bg-brand-700 text-white', true)
     const close = (v: boolean) => {
       document.removeEventListener('keydown', onKey)

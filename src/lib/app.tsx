@@ -59,7 +59,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       {children}
       <div className="pointer-events-none fixed inset-x-0 bottom-24 z-[100] flex flex-col items-center gap-2 px-4 lg:bottom-6 print:hidden" aria-live="polite">
         {toasts.map((t) => (
-          <div key={t.id} className={`max-w-md rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-lg ${t.kind === 'ok' ? 'bg-green-700' : 'bg-red-700'}`}>
+          <div key={t.id} className={`max-w-md rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-lg ${t.kind === 'ok' ? 'bg-[#15803d]' : 'bg-[#b91c1c]'}`}>
             {t.msg}
           </div>
         ))}

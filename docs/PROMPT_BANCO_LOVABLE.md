@@ -2,10 +2,10 @@
 
 Copie **tudo** que está no bloco abaixo, do início ao fim, e cole no chat do Lovable **com o Lovable Cloud já ativado** no projeto.
 
-> Se o Lovable recusar por ser longo demais, use a versão curta no fim desta página. Ela manda o Lovable ler o arquivo `supabase/migrations/20261030000000_lataria_init.sql` que já está no repositório.
+> Se o Lovable recusar por ser longo demais, use a versão curta no fim desta página. Ela manda o Lovable ler os arquivos de `supabase/migrations/` que já estão no repositório.
 
 ````
-Crie o banco de dados deste projeto no Lovable Cloud executando, como UMA migração, exatamente o SQL que está no final desta mensagem. Não altere nomes de tabelas, colunas, funções ou políticas: o frontend (src/lib/cloudBackend.ts) depende deles. Não crie tabelas extras e não crie edge functions.
+Crie o banco de dados deste projeto no Lovable Cloud executando, como migração, exatamente o SQL que está no final desta mensagem (são duas partes; rode na ordem). Não altere nomes de tabelas, colunas, funções ou políticas: o frontend (src/lib/cloudBackend.ts) depende deles. Não crie tabelas extras e não crie edge functions.
 
 O que esse SQL cria:
 - Tabelas: organizations, memberships, counters, customers, vehicles, quotes, work_orders, stage_events, payments, photos, catalog_items, costs.
@@ -28,7 +28,7 @@ Teste no preview e me confirme cada item:
 - Receber um pagamento menor que o saldo funciona. Um maior que o saldo mostra erro.
 Se algo falhar, me mostre o erro exato do console ou da API antes de mudar qualquer coisa.
 
-SQL DA MIGRAÇÃO:
+SQL DA MIGRAÇÃO — PARTE 1 (estrutura):
 
 ```sql
 -- Lataria — esquema inicial (Supabase / PostgreSQL)
@@ -532,6 +532,16 @@ $$;
 create policy photos_public_read on storage.objects for select to anon
   using (bucket_id = 'photos' and is_public_file(name));
 ```
+
+SQL DA MIGRAÇÃO — PARTE 2 (campos extras de clientes e veículos):
+
+```sql
+-- Campos extras de clientes e veículos (cadastro mais completo, todos opcionais).
+alter table customers add column if not exists city text;
+alter table customers add column if not exists birth_date date;
+alter table vehicles add column if not exists fuel text;
+alter table vehicles add column if not exists renavam text;
+```
 ````
 
 ---
@@ -539,5 +549,5 @@ create policy photos_public_read on storage.objects for select to anon
 ## Versão curta (se a mensagem acima for longa demais)
 
 ```
-Ative o banco (Lovable Cloud) e execute como migração, sem alterar nada, o arquivo supabase/migrations/20261030000000_lataria_init.sql que já está no repositório. Ele cria as tabelas, os triggers, as políticas RLS, as funções create_organization, public_document e public_decision e o bucket privado "photos". Não crie tabelas extras, não crie edge functions e não altere src/lib/cloudBackend.ts. Garanta que o .env tenha VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY. Ative login por e-mail e senha com confirmação automática de e-mail. Depois teste: criar conta → nome da oficina → fazer orçamento com foto → abrir o link do cliente sem login → abrir serviço → registrar pagamento. Se algo falhar, mostre o erro exato antes de mudar qualquer coisa.
+Ative o banco (Lovable Cloud) e execute como migração, sem alterar nada e nesta ordem, os arquivos supabase/migrations/20261030000000_lataria_init.sql e supabase/migrations/20261031000000_lataria_clientes_veiculos.sql que já estão no repositório. Ele cria as tabelas, os triggers, as políticas RLS, as funções create_organization, public_document e public_decision e o bucket privado "photos". Não crie tabelas extras, não crie edge functions e não altere src/lib/cloudBackend.ts. Garanta que o .env tenha VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY. Ative login por e-mail e senha com confirmação automática de e-mail. Depois teste: criar conta → nome da oficina → fazer orçamento com foto → abrir o link do cliente sem login → abrir serviço → registrar pagamento. Se algo falhar, mostre o erro exato antes de mudar qualquer coisa.
 ```

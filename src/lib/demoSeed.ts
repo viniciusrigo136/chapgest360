@@ -1,8 +1,8 @@
 import { db, filePath } from './db'
 import { DEFAULT_SETTINGS } from './defaults'
 import { convertToWorkOrder, newQuote, setStage, snapshot } from './docs'
-import { addDays, today, uid } from './format'
-import type { DocItem, Quote, Settings } from './types'
+import { addDays, randomToken, today, uid } from './format'
+import type { DocItem, PaymentMethod, Quote, Settings } from './types'
 
 let running: Promise<void> | null = null
 
@@ -81,6 +81,50 @@ async function seed(orgId: string) {
   })
   wo3 = (await db.get('work_orders', wo3.id))!
   await setStage(wo3, 'pronto', 'Seu carro está pronto para retirada!', s)
+
+  // 4) Histórico dos últimos 60 dias (para o resumo do dia e os indicadores)
+  const extra = [
+    { name: 'Carlos Mendes (exemplo)', plate: 'RTA3B45', brand: 'Chevrolet', model: 'Onix', color: 'Vermelho' },
+    { name: 'Transportes Sul Ltda (exemplo)', plate: 'MKD7F21', brand: 'Volkswagen', model: 'Saveiro', color: 'Branco', document: '11222333000181' },
+    { name: 'Patrícia Rocha (exemplo)', plate: 'PLX2C88', brand: 'Hyundai', model: 'HB20', color: 'Prata' },
+  ]
+  for (const p of extra) {
+    const c = await db.insert('customers', { name: p.name, phone: '11944444444', whatsapp: '11944444444', city: 'São Paulo', document: p.document, source: 'Indicação' })
+    const v = await db.insert('vehicles', { customer_id: c.id, plate: p.plate, brand: p.brand, model: p.model, color: p.color })
+    ids.push({ c: c.id, v: v.id })
+  }
+  const jobs: [number, string, number, DocItem[], number][] = [
+    [3, 'Para-choque traseiro', 52, [item('Pintura do para-choque traseiro', 'Para-choque traseiro', 70000), item('Para-choque novo', 'Para-choque traseiro', 45000, 'part')], 38000],
+    [4, 'Porta', 45, [item('Funilaria e pintura da porta', 'Porta diant. dir.', 110000), item('Verniz e massa', '', 22000, 'material')], 30000],
+    [5, 'Polimento', 38, [item('Polimento completo', '', 45000), item('Vitrificação', '', 60000)], 9000],
+    [3, 'Capô', 30, [item('Martelinho de ouro no capô', 'Capô', 55000)], 4000],
+    [0, 'Lateral', 24, [item('Pintura da lateral esquerda', 'Lateral tras. esq.', 150000), item('Tinta e materiais', '', 28000, 'material')], 52000],
+    [4, 'Para-lama', 17, [item('Reparo do para-lama', 'Para-lama diant. esq.', 65000), item('Farol novo', 'Para-choque dianteiro', 48000, 'part')], 41000],
+    [5, 'Retrovisor', 9, [item('Troca e pintura do retrovisor', 'Retrovisor dir.', 38000, 'service'), item('Capa do retrovisor', 'Retrovisor dir.', 21000, 'part')], 17000],
+    [1, 'Teto', 5, [item('Reparo de granizo no teto', 'Teto', 120000)], 15000],
+  ]
+  for (const [who, , daysAgo, items, cost] of jobs) {
+    const entry = addDays(today(), -daysAgo)
+    const out = addDays(entry, 3 + (daysAgo % 4))
+    const wo = await db.insert('work_orders', {
+      ...newWorkOrderSeed(), number: '', customer_id: ids[who].c, vehicle_id: ids[who].v, items, entry_date: entry, due_date: out,
+      stage: 'entregue', delivered_at: `${out}T17:00:00.000Z`, company_snapshot: snapshot(s),
+    })
+    await db.insert('stage_events', { work_order_id: wo.id, stage: 'entregue', note: 'Entregue' })
+    await db.insert('payments', { work_order_id: wo.id, customer_id: ids[who].c, amount: wo.total, method: daysAgo % 2 ? 'pix' : 'credito', paid_at: out, payer: 'cliente' })
+    await db.insert('costs', { work_order_id: wo.id, category: 'tinta', description: 'Tinta, verniz e materiais', amount: cost, spent_at: entry })
+  }
+
+  // 5) Um carro atrasado na pintura
+  const late = await db.insert('work_orders', {
+    ...newWorkOrderSeed(), number: '', customer_id: ids[5].c, vehicle_id: ids[5].v, entry_date: addDays(today(), -9), due_date: addDays(today(), -2), stage: 'pintura',
+    items: [item('Pintura do capô e para-choque', 'Capô', 140000)],
+  })
+  await db.insert('stage_events', { work_order_id: late.id, stage: 'pintura', note: 'Aguardando a tinta chegar.' })
+}
+
+function newWorkOrderSeed() {
+  return { simple: false, discount: 0, surcharge: 0, simple_total: 0, payment_terms: { methods: ["pix", "credito"] as PaymentMethod[], installments: 1, down_payment: 0, show_pix_qr: true }, insurance: null, public_token: randomToken(), public_enabled: true, checklist: null, subtotal: 0, total: 0 }
 }
 
 async function addPhotos(orgId: string, parentType: 'quote' | 'work_order', parentId: string, vehicleId: string, captions: string[], stage?: string) {

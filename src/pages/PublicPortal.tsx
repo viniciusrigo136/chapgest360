@@ -63,7 +63,7 @@ function Portal({ raw, token, reload }: { raw: PublicRaw; token: string; reload:
       )}
       <header className="px-4 pb-8 pt-5 text-white" style={{ background: `linear-gradient(160deg, ${color}, ${color}dd)` }}>
         <div className="flex items-center gap-3">
-          {logo && <img src={logo} alt="" className="h-14 w-14 rounded-lg bg-white object-contain p-1" />}
+          {logo && <img src={logo} alt="" className="h-14 w-14 rounded-lg bg-card object-contain p-1" />}
           <div>
             <div className="text-lg font-extrabold leading-tight">{c.trade_name}</div>
             {c.tagline && <div className="text-sm opacity-90">{c.tagline}</div>}
@@ -77,10 +77,10 @@ function Portal({ raw, token, reload }: { raw: PublicRaw; token: string; reload:
 
       <main className="-mt-4 space-y-3 px-3">
         {isQuote ? <QuoteStatusCard raw={raw} token={token} reload={reload} /> : (
-          <div className="rounded-2xl bg-white p-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
+          <div className="rounded-2xl bg-card p-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
             <div className="text-xs font-semibold uppercase text-slate-500">Etapa atual</div>
             <div className="text-xl font-bold" style={{ color }}>{stages[curIdx]?.name ?? '—'}</div>
-            <div className="mt-2 flex gap-1">{stages.map((s, i) => <div key={s.key} className="h-2 flex-1 rounded" style={{ background: i <= curIdx ? color : '#e2e8f0' }} />)}</div>
+            <div className="mt-2 flex gap-1">{stages.map((s, i) => <div key={s.key} className="h-2 flex-1 rounded" style={{ background: i <= curIdx ? color : 'var(--color-slate-200)' }} />)}</div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
               <div><div className="text-slate-500">Entrada</div><strong>{date(d.entry_date)}</strong></div>
               <div><div className="text-slate-500">{d.delivered_at ? 'Entregue em' : 'Previsão de entrega'}</div><strong>{d.delivered_at ? date(d.delivered_at) : date(d.due_date)}</strong></div>
@@ -90,7 +90,7 @@ function Portal({ raw, token, reload }: { raw: PublicRaw; token: string; reload:
         )}
 
         {!isQuote && (
-          <div className="rounded-2xl bg-white p-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
+          <div className="rounded-2xl bg-card p-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
             <h2 className="mb-3 text-base font-extrabold">Andamento</h2>
             <ol className="space-y-3">
               {stages.map((s, i) => {
@@ -116,7 +116,7 @@ function Portal({ raw, token, reload }: { raw: PublicRaw; token: string; reload:
 
         {raw.photos.length > 0 && <Gallery photos={raw.photos} token={token} stages={c.stages ?? []} />}
 
-        <div className="rounded-2xl bg-white p-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
+        <div className="rounded-2xl bg-card p-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
           <h2 className="mb-2 text-base font-extrabold">Serviços</h2>
           {d.simple ? <p className="whitespace-pre-wrap text-sm">{d.simple_description}</p> : (
             <ul className="divide-y divide-slate-100 text-sm">
@@ -144,10 +144,10 @@ function Portal({ raw, token, reload }: { raw: PublicRaw; token: string; reload:
         {showValues && <PaymentCard raw={raw} amount={isQuote ? split.customer : due} />}
 
         {d.delivered_at && c.warranty_terms && (
-          <div className="rounded-2xl bg-white p-4 text-sm shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70"><h2 className="mb-1 font-bold">Garantia</h2>{c.warranty_terms}</div>
+          <div className="rounded-2xl bg-card p-4 text-sm shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70"><h2 className="mb-1 font-bold">Garantia</h2>{c.warranty_terms}</div>
         )}
 
-        <div className="rounded-2xl bg-white p-4 text-sm shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
+        <div className="rounded-2xl bg-card p-4 text-sm shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
           <h2 className="mb-2 text-base font-extrabold">Fale com a oficina</h2>
           {wa && <a href={whatsappUrl(wa, `Olá! Sobre ${isQuote ? 'o orçamento' : 'a OS'} ${d.number}:`)} className="mb-3 flex min-h-13 items-center justify-center gap-2 rounded-xl bg-wa font-bold text-white"><WaIcon size={22} /> Chamar no WhatsApp</a>}
           <div className="space-y-2 text-slate-600">
@@ -188,7 +188,7 @@ function QuoteStatusCard({ raw, token, reload }: { raw: PublicRaw; token: string
   }
 
   return (
-    <div className="rounded-2xl bg-white p-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
+    <div className="rounded-2xl bg-card p-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
       <div className="flex items-center justify-between">
         <span className={`rounded-full px-3 py-1 text-sm font-semibold ${st.cls}`}>{expired && open ? 'Expirado' : d.status === 'enviado' || d.status === 'rascunho' ? 'Aguardando sua aprovação' : st.label}</span>
         <span className="text-sm text-slate-500">Válido até {date(d.valid_until)}</span>
@@ -220,7 +220,7 @@ function PaymentCard({ raw, amount }: { raw: PublicRaw; amount: number }) {
   const inst = installments(financed, t.installments, t.installments > 1 ? c.installment_fee_percent ?? 0 : 0)
   if (!t.methods.length && !payload) return null
   return (
-    <div className="rounded-2xl bg-white p-4 text-sm shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
+    <div className="rounded-2xl bg-card p-4 text-sm shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
       <h2 className="mb-2 text-base font-extrabold">Pagamento</h2>
       <p>{t.methods.map((m) => PAYMENT_METHODS[m]).join(' • ')}</p>
       {t.down_payment > 0 && <p>Entrada: <strong>{money(t.down_payment)}</strong></p>}
@@ -230,7 +230,7 @@ function PaymentCard({ raw, amount }: { raw: PublicRaw; amount: number }) {
         <div className="mt-3 flex flex-col items-center gap-2 rounded-lg bg-slate-50 p-3">
           {qr && <img src={qr} alt="QR Code PIX" className="h-44 w-44" />}
           <div className="text-center">PIX de <strong>{money(amount)}</strong><br /><span className="text-xs text-slate-500">Chave: {c.pix_key}</span></div>
-          <button className="min-h-12 w-full rounded-xl bg-white font-semibold ring-1 ring-slate-200" onClick={async () => setCopied(await copyText(payload))}>
+          <button className="min-h-12 w-full rounded-xl bg-card font-semibold ring-1 ring-slate-200" onClick={async () => setCopied(await copyText(payload))}>
             {copied ? 'Código copiado ✓' : 'Copiar PIX copia e cola'}
           </button>
         </div>
@@ -242,7 +242,7 @@ function PaymentCard({ raw, amount }: { raw: PublicRaw; amount: number }) {
 function Gallery({ photos, token, stages }: { photos: PublicRaw['photos']; token: string; stages: { key: string; name: string }[] }) {
   const [open, setOpen] = useState<string | null>(null)
   return (
-    <div className="rounded-2xl bg-white p-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
+    <div className="rounded-2xl bg-card p-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
       <h2 className="mb-2 text-base font-extrabold">Fotos</h2>
       <div className="grid grid-cols-3 gap-2">
         {photos.map((p) => <PubThumb key={p.path} path={p.path} token={token} label={p.caption || stages.find((s) => s.key === p.stage)?.name} onClick={() => setOpen(p.path)} />)}
@@ -267,7 +267,7 @@ function Lightbox({ path, token, onClose }: { path: string; token: string; onClo
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90" onClick={onClose}>
       {url && <img src={url} alt="" className="max-h-full max-w-full object-contain" />}
-      <button className="absolute right-3 top-3 h-11 w-11 rounded-full bg-white/20 text-2xl text-white" aria-label="Fechar">×</button>
+      <button className="absolute right-3 top-3 h-11 w-11 rounded-full bg-card/20 text-2xl text-white" aria-label="Fechar">×</button>
     </div>
   )
 }

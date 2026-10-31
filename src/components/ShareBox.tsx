@@ -35,12 +35,12 @@ export function ShareBox({ open, onClose, token, enabled, lastViewed, phone, mes
   const { toast } = useApp()
   const link = publicUrl(token)
   const qr = useQr(link, 480)
-  const viewCls = 'inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-white px-4 font-semibold ring-1 ring-slate-200 active:bg-slate-50'
+  const viewCls = 'inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-card px-4 font-semibold ring-1 ring-slate-200 active:bg-slate-50'
   return (
     <Sheet open={open} onClose={onClose} title="Mandar para o cliente">
       {enabled ? (
         <>
-          <div className="rounded-2xl bg-[#e7f7ec] p-3 text-sm leading-relaxed text-slate-800">{message}</div>
+          <div className="rounded-2xl bg-wa-soft p-3 text-sm leading-relaxed text-slate-800">{message}</div>
           <a href={whatsappUrl(phone, message)} target="_blank" rel="noreferrer" onClick={onSent}
             className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-wa px-4 text-base font-bold text-white shadow-sm shadow-wa/30 active:bg-wa-dark">
             <WaIcon size={22} /> Enviar pelo WhatsApp
@@ -57,7 +57,7 @@ export function ShareBox({ open, onClose, token, enabled, lastViewed, phone, mes
           <details className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
             <summary className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-slate-600"><QrCode size={18} /> QR Code e opções do link</summary>
             <div className="mt-3 flex flex-col items-center gap-3">
-              {qr && <img src={qr} alt="QR Code do link" className="h-48 w-48 rounded-lg bg-white p-2" />}
+              {qr && <img src={qr} alt="QR Code do link" className="h-48 w-48 rounded-lg bg-card p-2" />}
               <div className="grid w-full grid-cols-2 gap-2">
                 <Button variant="danger" onClick={async () => (await askConfirm('Desativar o link? O cliente não conseguirá mais abrir a página.', 'Desativar')) && onToggle(false)}>Desativar link</Button>
                 <Button variant="secondary" onClick={async () => (await askConfirm('Gerar um novo link? O link antigo deixará de funcionar.', 'Gerar')) && onRegenerate()}>Novo link</Button>

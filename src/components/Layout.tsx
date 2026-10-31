@@ -1,8 +1,9 @@
-import { Car, ClipboardList, FilePlus2, FileText, Home, Plus, Settings, UserPlus, Users, Wrench, type LucideIcon } from 'lucide-react'
+import { BarChart3, Car, ClipboardList, FilePlus2, FileText, Home, Plus, Settings, UserPlus, Users, Wrench, type LucideIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useApp } from '../lib/app'
 import { db } from '../lib/db'
+import { ThemeToggle } from './ThemeToggle'
 import { Sheet } from './ui'
 
 const NAV: { to: string; label: string; icon: LucideIcon; end?: boolean }[] = [
@@ -26,7 +27,7 @@ export function Layout() {
         </div>
       )}
 
-      <aside className="app-chrome fixed inset-y-0 left-0 hidden w-60 flex-col bg-white p-3 ring-1 ring-slate-200 lg:flex">
+      <aside className="app-chrome fixed inset-y-0 left-0 hidden w-64 flex-col bg-card p-3 ring-1 ring-slate-200 lg:flex">
         <Link to="/" className="mb-5 flex items-center gap-2 px-3 py-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600 text-white"><Car size={20} /></span>
           <span className="truncate text-lg font-extrabold">{settings?.trade_name || 'Lataria'}</span>
@@ -34,25 +35,29 @@ export function Layout() {
         <button type="button" onClick={() => setNewOpen(true)} className="mb-4 flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand-600 font-bold text-white shadow-sm shadow-brand-600/25">
           <Plus size={20} /> Novo
         </button>
-        {[...NAV, { to: '/config', label: 'Configurações', icon: Settings }].map((n) => (
+        {[...NAV.slice(0, 3), { to: '/indicadores', label: 'Indicadores', icon: BarChart3 }, NAV[3], { to: '/config', label: 'Configurações', icon: Settings }].map((n) => (
           <NavLink key={n.to} to={n.to} end={n.end} className={({ isActive }) => `mb-1 flex min-h-11 items-center gap-3 rounded-xl px-3 font-semibold ${isActive ? 'bg-brand-50 text-brand-700' : 'text-slate-600 hover:bg-slate-50'}`}>
             <n.icon size={20} />
             {n.label}
           </NavLink>
         ))}
+        <div className="mt-auto flex items-center justify-between gap-2 border-t border-slate-100 px-1 pt-3">
+          <span className="text-xs text-slate-500">Aparência</span>
+          <ThemeToggle withLabel />
+        </div>
       </aside>
 
-      <main className="mx-auto max-w-xl px-4 pb-28 pt-4 lg:ml-60 lg:max-w-none lg:px-10 lg:pb-10 lg:pt-8">
-        <div className="lg:max-w-3xl">
+      <main className="mx-auto max-w-xl px-4 pb-28 pt-4 sm:max-w-2xl lg:ml-64 lg:max-w-none lg:px-8 lg:pb-10 lg:pt-6 xl:px-12">
+        <div className="mx-auto max-w-6xl">
           <Outlet />
         </div>
       </main>
 
-      <nav hidden={editing} className="app-chrome fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+      <nav hidden={editing} className="app-chrome fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
         <div className="mx-auto grid max-w-xl grid-cols-5">
           {NAV.slice(0, 2).map((n) => <Tab key={n.to} {...n} />)}
           <button type="button" onClick={() => setNewOpen(true)} className="flex items-center justify-center" aria-label="Novo">
-            <span className="-mt-6 flex h-15 w-15 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-lg shadow-brand-600/30 ring-4 ring-white">
+            <span className="-mt-6 flex h-15 w-15 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-lg shadow-brand-600/30 ring-4 ring-card">
               <Plus size={30} strokeWidth={2.5} />
             </span>
           </button>

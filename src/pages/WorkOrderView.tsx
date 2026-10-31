@@ -67,7 +67,7 @@ export default function WorkOrderView() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="mx-auto max-w-3xl space-y-4">
       <PageHeader title={`Serviço ${wo.number.split('-').pop()}`} subtitle={`${wo.number} • chegou ${date(wo.entry_date)}`} back="/os"
         actions={<StatusPill color={stage?.color ?? '#64748b'}>{stage?.name ?? wo.stage}</StatusPill>} />
       {wo.archived_at && <ErrorBox message="Este serviço está arquivado." />}
@@ -76,7 +76,7 @@ export default function WorkOrderView() {
         extra={
           <div className="space-y-2">
             <div className="flex gap-1" aria-label={`Etapa ${idx + 1} de ${stages.length}`}>
-              {stages.map((s, i) => <div key={s.key} title={s.name} className="h-2 flex-1 rounded-full" style={{ background: i <= idx ? (stage?.color ?? '#1f47c7') : '#e5e9f0' }} />)}
+              {stages.map((s, i) => <div key={s.key} title={s.name} className="h-2 flex-1 rounded-full" style={{ background: i <= idx ? (stage?.color ?? '#1f47c7') : 'var(--color-slate-200)' }} />)}
             </div>
             <div className="flex justify-between text-xs text-slate-500">
               <span>{wo.delivered_at ? `Entregue em ${date(wo.delivered_at)}` : `${days} dia(s) na oficina`}</span>
@@ -207,7 +207,7 @@ export default function WorkOrderView() {
       {costOpen && <CostSheet woId={wo.id} hourly={settings.hourly_rate} onClose={() => setCostOpen(false)} />}
       {dueOpen && <DueSheet wo={wo} onClose={() => setDueOpen(false)} />}
       <Sheet open={!!notify} onClose={() => setNotify(null)} title="Avisar o cliente?">
-        <div className="rounded-2xl bg-[#e7f7ec] p-3 text-sm leading-relaxed">{notify}</div>
+        <div className="rounded-2xl bg-wa-soft p-3 text-sm leading-relaxed">{notify}</div>
         <a href={whatsappUrl(waPhone, notify ?? '')} target="_blank" rel="noreferrer" onClick={() => setNotify(null)}
           className="flex min-h-14 items-center justify-center gap-2 rounded-xl bg-wa font-bold text-white"><WaIcon size={22} /> Enviar pelo WhatsApp</a>
         <Button variant="secondary" className="w-full" onClick={() => setNotify(null)}>Agora não</Button>
@@ -278,7 +278,7 @@ function PaymentSheet({ wo, due, onClose }: { wo: WorkOrder; due: number; onClos
       </Field>
       <div className="grid grid-cols-4 gap-2">
         {quick.map((m) => (
-          <button key={m} type="button" onClick={() => setMethod(m)} className={`min-h-12 rounded-xl text-sm font-semibold ${method === m ? 'bg-brand-600 text-white' : 'bg-white ring-1 ring-slate-200'}`}>
+          <button key={m} type="button" onClick={() => setMethod(m)} className={`min-h-12 rounded-xl text-sm font-semibold ${method === m ? 'bg-brand-600 text-white' : 'bg-card ring-1 ring-slate-200'}`}>
             {m === 'credito' ? 'Crédito' : m === 'debito' ? 'Débito' : PAYMENT_METHODS[m]}
           </button>
         ))}
@@ -320,7 +320,7 @@ function CostSheet({ woId, hourly, onClose }: { woId: string; hourly: number; on
     <Sheet open onClose={onClose} title="Anotar gasto">
       <div className="grid grid-cols-3 gap-2">
         {(Object.keys(COST_CATEGORIES) as Cost['category'][]).map((k) => (
-          <button key={k} type="button" onClick={() => setC({ ...c, category: k })} className={`min-h-11 rounded-xl px-1 text-sm font-semibold ${c.category === k ? 'bg-brand-600 text-white' : 'bg-white ring-1 ring-slate-200'}`}>
+          <button key={k} type="button" onClick={() => setC({ ...c, category: k })} className={`min-h-11 rounded-xl px-1 text-sm font-semibold ${c.category === k ? 'bg-brand-600 text-white' : 'bg-card ring-1 ring-slate-200'}`}>
             {COST_CATEGORIES[k]}
           </button>
         ))}

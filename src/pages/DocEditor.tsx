@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { ChecklistEditor, emptyChecklist } from '../components/Checklist'
 import { CustomerVehiclePicker } from '../components/CustomerVehiclePicker'
-import { ItemsEditor } from '../components/ItemsEditor'
+import { draftToItem, emptyDraft, ItemsEditor, type ItemDraft } from '../components/ItemsEditor'
 import { InsuranceEditor, PaymentTermsEditor } from '../components/PaymentEditors'
 import { PhotoManager } from '../components/PhotoManager'
 import { Button, Collapsible, ErrorBox, Field, Input, Loading, MoneyInput, OptionalSection, PageHeader, Section, TextArea } from '../components/ui'
@@ -29,6 +29,7 @@ export default function DocEditor({ kind }: { kind: Kind }) {
   const [doc, setDoc] = useState<Doc | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [draftId] = useState(() => id ?? uid())
+  const [itemDraft, setItemDraft] = useState<ItemDraft>(emptyDraft)
 
   useEffect(() => {
     if (!settings) return
@@ -43,7 +44,12 @@ export default function DocEditor({ kind }: { kind: Kind }) {
     }
   }, [id, settings, kind, table, params])
 
-  const totals = useMemo(() => (doc ? computeTotals({ simple: !!doc.simple, simple_total: doc.simple_total, items: doc.items ?? [], discount: doc.discount ?? 0, surcharge: doc.surcharge ?? 0 }) : { subtotal: 0, total: 0 }), [doc])
+  // Itens + o que está digitado na linha de adicionar.
+  const allItems = useMemo(() => {
+    const d = draftToItem(itemDraft)
+    return [...(doc?.items ?? []), ...(d ? [d] : [])]
+  }, [doc, itemDraft])
+  const totals = useMemo(() => (doc ? computeTotals({ simple: !!doc.simple, simple_total: doc.simple_total, items: allItems, discount: doc.discount ?? 0, surcharge: doc.surcharge ?? 0 }) : { subtotal: 0, total: 0 }), [doc, allItems])
 
   if (error) return <ErrorBox message={error} />
   if (!doc || !settings) return <Loading />
@@ -53,11 +59,13 @@ export default function DocEditor({ kind }: { kind: Kind }) {
 
   async function save() {
     if (!doc!.customer_id || !doc!.vehicle_id) throw new Error('Escolha o cliente e o carro')
-    if (!doc!.simple && (doc!.items ?? []).length === 0 && kind === 'quote') throw new Error('Adicione pelo menos um serviço')
+    if (!doc!.simple && allItems.length === 0 && kind === 'quote') throw new Error('Adicione pelo menos um serviço')
     if (doc!.simple && !doc!.simple_description?.trim()) throw new Error('Descreva o serviço')
+    if (doc!.simple && !doc!.simple_total) throw new Error('Informe o valor total')
     if (doc!.insurance && !doc!.insurance.insurer.trim()) throw new Error('Informe o nome da seguradora')
     if (kind === 'work_order' && !doc!.entry_date) throw new Error('Informe a data de entrada')
-    const row = kind === 'work_order' ? { ...doc!, due_date: doc!.due_date || null } : doc!
+    const base = { ...doc!, items: doc!.simple ? doc!.items ?? [] : allItems }
+    const row = kind === 'work_order' ? { ...base, due_date: doc!.due_date || null } : base
     if (id) return db.update(table, id, row)
     const created = await db.insert(table, { ...row, id: draftId, number: '' } as never)
     if (kind === 'work_order') await db.insert('stage_events', { work_order_id: created.id, stage: (created as WorkOrder).stage, note: 'Carro recebido' })
@@ -80,7 +88,7 @@ export default function DocEditor({ kind }: { kind: Kind }) {
   const extras = [doc.insurance && 'seguradora', doc.discount && 'desconto', doc.checklist && 'checklist', doc.payment_terms?.installments && doc.payment_terms.installments > 1 && `${doc.payment_terms.installments}x`].filter(Boolean).join(', ')
 
   return (
-    <div className="space-y-4 pb-28">
+    <div className="mx-auto max-w-3xl space-y-4 pb-28">
       <PageHeader title={title} back={true} />
 
       <CustomerVehiclePicker customerId={doc.customer_id} vehicleId={doc.vehicle_id} onChange={(c, v) => setDoc((d) => ({ ...d!, customer_id: c, vehicle_id: v }))} />
@@ -104,7 +112,7 @@ export default function DocEditor({ kind }: { kind: Kind }) {
             </Field>
           </>
         ) : (
-          <ItemsEditor items={doc.items ?? []} onChange={(items) => set('items', items)} />
+          <ItemsEditor items={doc.items ?? []} onChange={(items) => set('items', items)} draft={itemDraft} onDraft={setItemDraft} />
         )}
       </Section>
 
@@ -181,7 +189,7 @@ export default function DocEditor({ kind }: { kind: Kind }) {
         </Field>
       </Collapsible>
 
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur lg:left-60">
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-card/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur lg:left-64">
         <div className="mx-auto flex max-w-xl items-center gap-3 lg:max-w-3xl">
           <div className="min-w-0 flex-1">
             <div className="text-xs font-medium text-slate-500">{doc.insurance ? `Cliente paga ${money(split.customer)}` : 'Total'}</div>

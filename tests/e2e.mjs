@@ -9,6 +9,7 @@ const OUT = process.env.OUT ?? 'test-results'
 mkdirSync(OUT, { recursive: true })
 const browser = await chromium.launch()
 const ctx = await browser.newContext({ ...devices['Pixel 7'], locale: 'pt-BR', timezoneId: 'America/Sao_Paulo' })
+await ctx.addInitScript(() => { try { localStorage.setItem('lataria-resumo', 'nunca') } catch {} })
 const page = await ctx.newPage()
 const errors = []
 page.on('pageerror', (e) => errors.push(e.message))
@@ -51,7 +52,7 @@ await page.getByLabel('Placa *').fill('abc1d23')
 await page.getByLabel('Marca', { exact: true }).fill('VW')
 await page.getByLabel('Modelo', { exact: true }).fill('Gol')
 await page.getByLabel('Cor', { exact: true }).fill('Prata')
-await page.getByRole('button', { name: 'Salvar veículo' }).click()
+await page.getByRole('button', { name: 'Salvar carro' }).click()
 await page.getByText('Maria Souza').first().waitFor()
 
 for (const [desc, price] of [['Pintura do para-choque dianteiro', '850,00'], ['Reparo da porta dianteira esquerda', '1.200,00']]) {
