@@ -207,7 +207,7 @@ export default function WorkOrderView() {
       {costOpen && <CostSheet woId={wo.id} hourly={settings.hourly_rate} onClose={() => setCostOpen(false)} />}
       {dueOpen && <DueSheet wo={wo} onClose={() => setDueOpen(false)} />}
       <Sheet open={!!notify} onClose={() => setNotify(null)} title="Avisar o cliente?">
-        <div className="rounded-2xl bg-wa-soft p-3 text-sm leading-relaxed">{notify}</div>
+        <div className="rounded-2xl bg-wa-soft p-3 text-sm leading-relaxed [overflow-wrap:anywhere]">{notify}</div>
         <a href={whatsappUrl(waPhone, notify ?? '')} target="_blank" rel="noreferrer" onClick={() => setNotify(null)}
           className="flex min-h-14 items-center justify-center gap-2 rounded-xl bg-wa font-bold text-white"><WaIcon size={22} /> Enviar pelo WhatsApp</a>
         <Button variant="secondary" className="w-full" onClick={() => setNotify(null)}>Agora não</Button>
