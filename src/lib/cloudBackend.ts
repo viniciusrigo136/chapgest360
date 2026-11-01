@@ -44,7 +44,8 @@ export function createCloudBackend(url: string, anonKey: string): Backend {
       check(await sb.auth.signInWithPassword({ email, password }))
     },
     async signUp(email, password) {
-      check(await sb.auth.signUp({ email, password }))
+      // O link de confirmação do e-mail volta para o endereço onde o sistema está aberto.
+      check(await sb.auth.signUp({ email, password, options: { emailRedirectTo: location.origin } }))
     },
     async signOut() {
       await sb.auth.signOut()
