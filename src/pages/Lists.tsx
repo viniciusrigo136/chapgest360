@@ -62,7 +62,7 @@ export function QuoteList() {
         <Empty icon={FileText} title={quotes.length ? 'Nada por aqui' : 'Nenhum orçamento ainda'} text={quotes.length ? 'Tente outro filtro ou busca.' : 'Faça o primeiro: tire as fotos, coloque os serviços e mande no WhatsApp.'}
           action={!quotes.length && <LinkButton to="/orcamentos/novo" icon={FilePlus2}>Fazer orçamento</LinkButton>} />
       ) : (
-        <ul className="grid gap-2 lg:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-2 lg:grid-cols-2">
           {list.map((x) => {
             const st = QUOTE_STATUS[isQuoteExpired(x) ? 'expirado' : x.status]
             const v = refs.v.get(x.vehicle_id)
@@ -131,7 +131,7 @@ export function WorkOrderList() {
         <Empty icon={Wrench} title={data.orders.length ? 'Nada por aqui' : 'Nenhum serviço ainda'} text="Abra um serviço a partir de um orçamento aprovado ou receba um carro direto."
           action={!data.orders.length && <LinkButton to="/os/nova" icon={Plus}>Receber um carro</LinkButton>} />
       ) : (
-        <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{list.map((x) => <WorkOrderCard key={x.id} wo={x} refs={refs} due={dueOf(x.id, x.total)} />)}</ul>
+        <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">{list.map((x) => <WorkOrderCard key={x.id} wo={x} refs={refs} due={dueOf(x.id, x.total)} />)}</ul>
       )}
     </div>
   )

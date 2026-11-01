@@ -70,7 +70,7 @@ export default function Dashboard() {
         <ChevronRight size={20} className="text-slate-400" />
       </button>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-start">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-start">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <ActionTile to="/orcamentos/novo" icon={FilePlus2} label="Novo orçamento" tone="brand" />

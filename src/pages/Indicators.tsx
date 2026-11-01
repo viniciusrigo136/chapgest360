@@ -94,7 +94,7 @@ export default function Indicators() {
         {kpis.map((k) => <Kpi key={k.label} {...k} />)}
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[2fr_1fr]">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Card>
           <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-[15px] font-bold">Vendas por dia</h2>
