@@ -3,87 +3,95 @@
 /* Modo escuro: classe "dark" no <html> (botão sol/lua). */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Oficina: azul de carroceria como cor principal, neutros levemente azulados, fonte arredondada e legível. */
+/*
+ * Identidade TecGest 360 (família ChapGest 360): azul #2563EB, grafite #0F172A, fundo #F8FAFC,
+ * cartões brancos com borda #E2E8F0, raio 10px, títulos em Manrope e texto em Inter, sem gradientes.
+ * Os nomes das classes (brand, ink, page, card...) continuam os mesmos; só os valores seguem o guia.
+ */
 @theme {
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-heading: "Manrope", "Inter", system-ui, sans-serif;
   --font-plate: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
-  --color-brand-50: #eef3ff;
-  --color-brand-100: #dce6ff;
-  --color-brand-200: #bccdff;
-  --color-brand-300: #8eaaff;
-  --color-brand-500: #3a63e8;
-  --color-brand-600: #1f47c7;
-  --color-brand-700: #1a3ba3;
-  --color-brand-800: #172f7d;
-  --color-ink: #13203a;
-  --color-page: #f2f4f8;
+  /* raio base 10px para cartões, botões e campos */
+  --radius-xl: 0.625rem;
+  --radius-2xl: 0.625rem;
+  /* primária e derivados: accent #E8F0FE / accent-foreground #1E40AF */
+  --color-brand-50: #e8f0fe;
+  --color-brand-100: #dbe7fd;
+  --color-brand-200: #bfdbfe;
+  --color-brand-300: #93c5fd;
+  --color-brand-500: #2563eb;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1e40af;
+  --color-brand-800: #1e3a8a;
+  --color-ink: #0f172a;
+  --color-page: #f8fafc;
   --color-card: #ffffff;
-  --color-panel: #13203a;
-  --color-wa-soft: #e7f7ec;
-  --color-wa: #1fa855;
-  --color-wa-dark: #178a45;
-  /* Gráficos (validados para daltonismo no claro e no escuro) */
-  --color-chart-1: #1f47c7;
-  --color-chart-2: #d97706;
-  --color-chart-3: #0d9488;
+  --color-panel: #0f172a;
+  /* WhatsApp usa o verde de sucesso da paleta (texto branco legível) */
+  --color-wa-soft: #ecfdf5;
+  --color-wa: #047857;
+  --color-wa-dark: #065f46;
+  /* Gráficos: ordem oficial das séries */
+  --color-chart-1: #2563eb;
+  --color-chart-2: #10b981;
+  --color-chart-3: #60a5fa;
 }
 
 /*
- * No escuro só redefinimos as variáveis de cor: as mesmas classes (bg-card, text-slate-500,
- * ring-slate-200, bg-brand-50...) passam a usar os tons escuros sem duplicar o código.
+ * Tema escuro do guia: fundo #0F172A, cartões #16213A, texto #F8FAFC, muted #1E293B,
+ * texto secundário #A7B4C8, accent #1E3A8A, destrutivo #EF4444, sucesso #10B981, primária #2563EB.
+ * Só redefinimos as variáveis: as mesmas classes passam a usar os tons escuros.
  */
 .dark {
   color-scheme: dark;
-  --color-page: #0b1120;
-  --color-card: #141c2e;
-  --color-panel: #1c2742;
-  --color-ink: #e8edf6;
-  --color-wa-soft: #11301f;
-  --color-chart-1: #5b7ff0;
-  --color-chart-2: #c97a08;
-  --color-chart-3: #0f9f8f;
-  --color-slate-50: #1a2335;
-  --color-slate-100: #202b41;
-  --color-slate-200: #2b3852;
-  --color-slate-300: #3b4966;
-  --color-slate-400: #6c7b98;
-  --color-slate-500: #95a3bd;
-  --color-slate-600: #b5c1d6;
-  --color-slate-700: #cbd5e4;
-  --color-slate-800: #dce3ee;
-  --color-slate-900: #eef2f8;
-  --color-brand-50: #172447;
-  --color-brand-100: #1d2e5b;
-  --color-brand-200: #2a4182;
-  --color-brand-300: #3d5ab0;
-  --color-brand-500: #6b8cf7;
-  --color-brand-600: #3f6cf0;
-  --color-brand-700: #a3b9ff;
-  --color-brand-800: #c2d1ff;
-  --color-amber-50: #2a2112;
+  --color-page: #0f172a;
+  --color-card: #16213a;
+  --color-panel: #1e293b;
+  --color-ink: #f8fafc;
+  --color-wa-soft: #0d2a22;
+  --color-wa: #059669;
+  --color-wa-dark: #047857;
+  --color-slate-50: #1a253d;
+  --color-slate-100: #1e293b;
+  --color-slate-200: #273449;
+  --color-slate-300: #334155;
+  --color-slate-400: #7d8ba3;
+  --color-slate-500: #a7b4c8;
+  --color-slate-600: #a7b4c8;
+  --color-slate-700: #cbd5e1;
+  --color-slate-800: #e2e8f0;
+  --color-slate-900: #f8fafc;
+  --color-brand-50: #1e3a8a;
+  --color-brand-100: #1e3a8a;
+  --color-brand-200: #1e40af;
+  --color-brand-300: #2563eb;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #bfdbfe;
+  --color-brand-800: #dbeafe;
+  --color-amber-50: #2b2110;
   --color-amber-100: #3a2c10;
-  --color-amber-700: #f3c062;
-  --color-amber-800: #f6cd7c;
-  --color-amber-900: #f9da98;
+  --color-amber-700: #fbbf24;
+  --color-amber-800: #fcd34d;
+  --color-amber-900: #fde68a;
   --color-red-50: #2c1518;
   --color-red-100: #3d1a1f;
   --color-red-200: #5b2229;
   --color-red-300: #7f2a33;
-  --color-red-600: #f87171;
+  --color-red-500: #ef4444;
+  --color-red-600: #ef4444;
   --color-red-700: #fca5a5;
   --color-red-800: #fecaca;
   --color-red-900: #fecaca;
-  --color-emerald-50: #0f2a20;
-  --color-emerald-700: #6ee7b7;
-  --color-emerald-800: #a7f3d0;
-  --color-green-100: #123222;
-  --color-green-900: #bbf7d0;
-  --color-orange-100: #3a2410;
-  --color-orange-900: #fdd8a8;
+  --color-emerald-50: #0d2a22;
+  --color-emerald-700: #34d399;
+  --color-emerald-800: #6ee7b7;
 }
 
 html { -webkit-tap-highlight-color: transparent; }
 body { background: var(--color-page); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4, .font-heading { font-family: var(--font-heading); }
 summary { min-height: 1.75rem; }
 summary::-webkit-details-marker { display: none; }
 input, select, textarea, button { font: inherit; }

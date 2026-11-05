@@ -149,7 +149,7 @@ function Kpi({ label, value, cur, prev }: { label: string; value: string; cur: n
   const Icon = pct === null || Math.abs(pct) < 0.5 ? Minus : pct > 0 ? ArrowUpRight : ArrowDownRight
   const tone = pct === null || Math.abs(pct) < 0.5 ? 'bg-slate-100 text-slate-600' : pct > 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
   return (
-    <div className="rounded-2xl bg-card p-3 ring-1 ring-slate-200/70">
+    <div className="rounded-2xl bg-card p-3 ring-1 ring-slate-200">
       <div className="text-xs font-medium text-slate-500">{label}</div>
       <div className="tnum mt-1 truncate text-xl font-extrabold">{value}</div>
       <span className={`mt-1 inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[11px] font-bold ${tone}`}>

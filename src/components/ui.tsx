@@ -6,14 +6,14 @@ import { moneyInput, normalizePlate, parseMoney } from '../lib/format'
 
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost' | 'success' | 'whatsapp'
 const variants: Record<Variant, string> = {
-  primary: 'bg-brand-600 text-white shadow-sm shadow-brand-600/25 active:bg-brand-700 disabled:bg-brand-300 disabled:shadow-none',
+  primary: 'bg-brand-600 text-white active:bg-brand-700 disabled:bg-brand-300',
   secondary: 'bg-card text-ink ring-1 ring-slate-200 active:bg-slate-50 disabled:text-slate-400',
   danger: 'bg-card text-red-700 ring-1 ring-red-200 active:bg-red-50',
   ghost: 'text-brand-700 active:bg-brand-50',
   success: 'bg-emerald-600 text-white active:bg-emerald-700 disabled:bg-emerald-300',
-  whatsapp: 'bg-wa text-white shadow-sm shadow-wa/30 active:bg-wa-dark',
+  whatsapp: 'bg-wa text-white active:bg-wa-dark',
 }
-const btnBase = 'inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-4 text-[15px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 disabled:cursor-not-allowed'
+const btnBase = 'inline-flex min-h-12 lg:min-h-10 items-center justify-center gap-2 rounded-xl px-4 text-[15px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 disabled:cursor-not-allowed'
 
 export function Button({ variant = 'primary', icon: Icon, className = '', children, ...p }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; icon?: LucideIcon }) {
   return (
@@ -36,8 +36,8 @@ export function LinkButton({ to, variant = 'primary', icon: Icon, className = ''
 /** Botão grande de ação, com ícone e texto curto embaixo (usado no início e nas telas de documento). */
 export function ActionTile({ icon: Icon, label, to, onClick, tone = 'white' }: { icon: LucideIcon; label: string; to?: string; onClick?: () => void; tone?: 'brand' | 'white' | 'whatsapp' }) {
   const cls = {
-    brand: 'bg-brand-600 text-white shadow-md shadow-brand-600/25',
-    whatsapp: 'bg-wa text-white shadow-md shadow-wa/25',
+    brand: 'bg-brand-600 text-white',
+    whatsapp: 'bg-wa text-white',
     white: 'bg-card text-ink ring-1 ring-slate-200',
   }[tone]
   const inner = (
@@ -62,7 +62,7 @@ export function Field({ label, hint, error, children, className = '' }: { label:
   )
 }
 
-const inputCls = 'block w-full min-h-12 rounded-xl border-0 bg-card px-3.5 text-base text-ink ring-1 ring-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:bg-slate-100'
+const inputCls = 'block w-full min-h-12 lg:min-h-10 rounded-lg border-0 bg-card px-3.5 text-base text-ink ring-1 ring-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:bg-slate-100'
 
 export function Input({ className = '', ...p }: InputHTMLAttributes<HTMLInputElement>) {
   return <input {...p} className={`${inputCls} ${className}`} />
@@ -107,12 +107,12 @@ export function MoneyInput({ value, onChange, className = '', ...p }: { value: n
 }
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`rounded-2xl bg-card p-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70 ${className}`}>{children}</div>
+  return <div className={`rounded-2xl bg-card p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)] ring-1 ring-slate-200 ${className}`}>{children}</div>
 }
 
 export function Section({ title, icon: Icon, children, right, className = '' }: { title: string; icon?: LucideIcon; children: ReactNode; right?: ReactNode; className?: string }) {
   return (
-    <section className={`rounded-2xl bg-card shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70 ${className}`}>
+    <section className={`rounded-2xl bg-card shadow-[0_1px_2px_rgba(15,23,42,0.04)] ring-1 ring-slate-200 ${className}`}>
       <div className="flex min-h-13 items-center justify-between gap-2 px-4 pt-3">
         <h2 className="flex items-center gap-2 text-[15px] font-bold text-ink">
           {Icon && <Icon size={18} className="text-brand-600" aria-hidden />}
@@ -128,7 +128,7 @@ export function Section({ title, icon: Icon, children, right, className = '' }: 
 /** Bloco que abre e fecha. Usado para esconder o que não é do dia a dia. */
 export function Collapsible({ title, icon: Icon, subtitle, children, defaultOpen = false }: { title: string; icon?: LucideIcon; subtitle?: string; children: ReactNode; defaultOpen?: boolean }) {
   return (
-    <details open={defaultOpen} className="group rounded-2xl bg-card shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70">
+    <details open={defaultOpen} className="group rounded-2xl bg-card shadow-[0_1px_2px_rgba(15,23,42,0.04)] ring-1 ring-slate-200">
       <summary className="flex min-h-14 cursor-pointer list-none items-center gap-3 px-4">
         {Icon && <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><Icon size={18} aria-hidden /></span>}
         <span className="flex-1">
@@ -199,7 +199,7 @@ export function Badge({ children, className = 'bg-slate-100 text-slate-700', sty
 /** Etapa/situação com bolinha colorida. */
 export function StatusPill({ color, children }: { color: string; children: ReactNode }) {
   return (
-    <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold" style={{ background: `${color}1a`, color }}>
+    <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold" style={{ background: `${color}1f`, color: `color-mix(in srgb, ${color} 72%, var(--color-ink))` }}>
       <span className="h-2 w-2 rounded-full" style={{ background: color }} />
       {children}
     </span>
@@ -244,7 +244,7 @@ export function Sheet({ open, onClose, title, children }: { open: boolean; onClo
   if (!open) return null
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-[2px] sm:items-center print:hidden" onClick={onClose}>
-      <div className="max-h-[92dvh] w-full overflow-y-auto rounded-t-3xl bg-card sm:max-w-lg sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
+      <div className="max-h-[92dvh] w-full overflow-y-auto rounded-t-3xl bg-card sm:max-w-lg sm:rounded-xl" onClick={(e) => e.stopPropagation()}>
         <div className="sticky top-0 z-10 bg-card px-4 pb-2 pt-2">
           <div className="mx-auto mb-2 h-1.5 w-10 rounded-full bg-slate-200 sm:hidden" />
           <div className="flex items-center justify-between">
@@ -285,7 +285,7 @@ export function SearchInput({ value, onChange, placeholder }: { value: string; o
 /** Linha de lista tocável (cliente, veículo, documento). */
 export function RowLink({ to, children, className = '' }: { to: string; children: ReactNode; className?: string }) {
   return (
-    <Link to={to} className={`block rounded-2xl bg-card p-3.5 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70 active:bg-slate-50 ${className}`}>
+    <Link to={to} className={`block rounded-2xl bg-card p-3.5 shadow-[0_1px_2px_rgba(15,23,42,0.04)] ring-1 ring-slate-200 active:bg-slate-50 ${className}`}>
       {children}
     </Link>
   )

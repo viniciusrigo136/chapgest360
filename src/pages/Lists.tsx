@@ -151,7 +151,7 @@ export function WorkOrderCard({ wo, refs, due }: { wo: WorkOrder; refs: { c: Map
   const phoneNr = c?.whatsapp || c?.phone
   const msg = settings ? fillTemplate(wo.stage === 'pronto' ? settings.templates.ready : settings.templates.stage, messageVars({ customer: c, vehicle: v, number: wo.number, token: wo.public_token, stage: st?.name, due: wo.due_date })) : ''
   return (
-    <li className={`flex flex-col rounded-2xl bg-card shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ${late ? 'ring-red-300' : 'ring-slate-200/70'}`}>
+    <li className={`flex flex-col rounded-2xl bg-card shadow-[0_1px_2px_rgba(15,23,42,0.04)] ring-1 ${late ? 'ring-red-300' : 'ring-slate-200'}`}>
       <Link to={`/os/${wo.id}`} className="flex-1 p-3.5 active:bg-slate-50">
         <div className="flex items-center justify-between gap-2">
           <span className="rounded-lg bg-panel px-2.5 py-1 text-sm font-extrabold text-white">Nº {wo.number.split('-').pop()}</span>
@@ -159,8 +159,8 @@ export function WorkOrderCard({ wo, refs, due }: { wo: WorkOrder; refs: { c: Map
         </div>
         <div className="mt-2.5 flex flex-wrap gap-1.5">
           <StatusPill color={st?.color ?? '#64748b'}>{st?.name ?? wo.stage}</StatusPill>
-          {late && <Badge className="bg-red-100 text-red-700">Atrasado</Badge>}
-          {charging && <Badge className="bg-amber-100 text-amber-800">Em cobrança {money(due!)}</Badge>}
+          {late && <Badge className="bg-red-50 text-red-600">Atrasado</Badge>}
+          {charging && <Badge className="bg-amber-50 text-amber-700">Em cobrança {money(due!)}</Badge>}
           {wo.insurance && <Badge className="bg-slate-100 text-slate-600">{wo.insurance.insurer}</Badge>}
         </div>
         <div className="mt-2 truncate text-xs font-medium uppercase tracking-wide text-slate-500">{c?.name}</div>
