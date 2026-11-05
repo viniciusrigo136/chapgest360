@@ -42,7 +42,7 @@ export function ShareBox({ open, onClose, token, enabled, lastViewed, phone, mes
         <>
           <div className="rounded-2xl bg-wa-soft p-3 text-sm leading-relaxed [overflow-wrap:anywhere] text-slate-800">{message}</div>
           <a href={whatsappUrl(phone, message)} target="_blank" rel="noreferrer" onClick={onSent}
-            className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-wa px-4 text-base font-bold text-white active:bg-wa-dark">
+            className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-wa px-4 text-base font-bold text-white shadow-sm shadow-wa/30 active:bg-wa-dark">
             <WaIcon size={22} /> Enviar pelo WhatsApp
           </a>
           <div className="grid grid-cols-2 gap-2">

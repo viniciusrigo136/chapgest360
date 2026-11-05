@@ -151,13 +151,13 @@ export default function Settings() {
         <Button variant="secondary" icon={Plus} onClick={() => set('stages', [...s.stages.slice(0, -2), { key: `etapa_${Date.now()}`, name: 'Nova etapa', color: '#64748b', public: true }, ...s.stages.slice(-2)])}>Etapa</Button>
       </Collapsible>
 
-      <Link to="/catalogo" className="flex min-h-14 items-center gap-3 rounded-2xl bg-card px-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)] ring-1 ring-slate-200 active:bg-slate-50">
+      <Link to="/catalogo" className="flex min-h-14 items-center gap-3 rounded-2xl bg-card px-4 shadow-[0_1px_2px_rgba(19,32,58,0.06)] ring-1 ring-slate-200/70 active:bg-slate-50">
         <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><BookOpen size={18} /></span>
         <span className="flex-1"><span className="block text-[15px] font-bold">Serviços com preço</span><span className="block text-xs text-slate-500">Aparecem como sugestão no orçamento</span></span>
         <ChevronRight size={20} className="text-slate-400" />
       </Link>
 
-      <div className="flex items-center justify-between gap-3 rounded-2xl bg-card px-4 py-3 ring-1 ring-slate-200">
+      <div className="flex items-center justify-between gap-3 rounded-2xl bg-card px-4 py-3 ring-1 ring-slate-200/70">
         <span><span className="block text-[15px] font-bold">Aparência</span><span className="block text-xs text-slate-500">Modo claro ou escuro</span></span>
         <ThemeToggle withLabel />
       </div>

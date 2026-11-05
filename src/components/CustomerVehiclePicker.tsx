@@ -60,7 +60,7 @@ export function CustomerVehiclePicker({ customerId, vehicleId, onChange }: {
 
   return (
     <>
-      <button type="button" onClick={start} className={`flex min-h-18 w-full items-center gap-3 rounded-2xl bg-card px-4 py-3 text-left shadow-[0_1px_2px_rgba(15,23,42,0.04)] active:bg-slate-50 ${customer ? 'ring-1 ring-slate-200' : 'ring-2 ring-brand-500'}`}>
+      <button type="button" onClick={start} className={`flex min-h-18 w-full items-center gap-3 rounded-2xl bg-card px-4 py-3 text-left shadow-[0_1px_2px_rgba(19,32,58,0.06)] active:bg-slate-50 ${customer ? 'ring-1 ring-slate-200' : 'ring-2 ring-brand-500'}`}>
         {customer ? (
           <>
             {vehicle ? <Plate value={vehicle.plate} /> : <UserRound className="text-slate-400" />}

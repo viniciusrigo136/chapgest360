@@ -1,7 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { Session } from './backend'
 import { db } from './db'
-import { upgradeStages } from './defaults'
 import type { Settings } from './types'
 
 interface AppState {
@@ -32,8 +31,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const s = await db.getSession()
       if (import.meta.env.VITE_DEMO && s?.organizationId) await (await import('./demoSeed')).seedDemo(s.organizationId)
       setSession(s)
-      const st = s?.organizationId ? await db.getSettings() : null
-      setSettings(st ? { ...st, stages: upgradeStages(st.stages), brand_color: st.brand_color === '#1d4ed8' ? '#2563eb' : st.brand_color } : null)
+      setSettings(s?.organizationId ? await db.getSettings() : null)
     } catch {
       setSession(null)
     } finally {
@@ -61,7 +59,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       {children}
       <div className="pointer-events-none fixed inset-x-0 bottom-24 z-[100] flex flex-col items-center gap-2 px-4 lg:bottom-6 print:hidden" aria-live="polite">
         {toasts.map((t) => (
-          <div key={t.id} className={`max-w-md rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-lg ${t.kind === 'ok' ? 'bg-[#047857]' : 'bg-[#dc2626]'}`}>
+          <div key={t.id} className={`max-w-md rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-lg ${t.kind === 'ok' ? 'bg-[#15803d]' : 'bg-[#b91c1c]'}`}>
             {t.msg}
           </div>
         ))}

@@ -20,7 +20,7 @@ const fonts = readFileSync('index.html', 'utf8').match(/<link rel="stylesheet" h
 const icon = 'data:image/svg+xml;base64,' + Buffer.from(readFileSync('public/icon.svg')).toString('base64')
 writeFileSync(
   out,
-  `<title>ChapGest 360</title>
+  `<title>Lataria</title>
 <link rel="icon" href="${icon}">
 ${fonts}
 <style>${css}</style>

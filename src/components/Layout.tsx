@@ -1,10 +1,9 @@
-import { BarChart3, ClipboardList, FilePlus2, FileText, Home, Plus, Settings, UserPlus, Users, Wrench, type LucideIcon } from 'lucide-react'
+import { BarChart3, Car, ClipboardList, FilePlus2, FileText, Home, Plus, Settings, UserPlus, Users, Wrench, type LucideIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useApp } from '../lib/app'
 import { db } from '../lib/db'
 import { ThemeToggle } from './ThemeToggle'
-import { Logo } from './Logo'
 import { Sheet } from './ui'
 
 const NAV: { to: string; label: string; icon: LucideIcon; end?: boolean }[] = [
@@ -29,10 +28,11 @@ export function Layout() {
       )}
 
       <aside className="app-chrome fixed inset-y-0 left-0 hidden w-64 flex-col bg-card p-3 ring-1 ring-slate-200 lg:flex">
-        <Link to="/" className="mb-5 px-2 py-2">
-          <Logo subtitle={settings?.trade_name} />
+        <Link to="/" className="mb-5 flex items-center gap-2 px-3 py-2">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600 text-white"><Car size={20} /></span>
+          <span className="truncate text-lg font-extrabold">{settings?.trade_name || 'Lataria'}</span>
         </Link>
-        <button type="button" onClick={() => setNewOpen(true)} className="mb-4 flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand-600 font-bold text-white">
+        <button type="button" onClick={() => setNewOpen(true)} className="mb-4 flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand-600 font-bold text-white shadow-sm shadow-brand-600/25">
           <Plus size={20} /> Novo
         </button>
         {[...NAV.slice(0, 3), { to: '/indicadores', label: 'Indicadores', icon: BarChart3 }, NAV[3], { to: '/config', label: 'Configurações', icon: Settings }].map((n) => (
@@ -57,7 +57,7 @@ export function Layout() {
         <div className="mx-auto grid max-w-xl grid-cols-5">
           {NAV.slice(0, 2).map((n) => <Tab key={n.to} {...n} />)}
           <button type="button" onClick={() => setNewOpen(true)} className="flex items-center justify-center" aria-label="Novo">
-            <span className="-mt-6 flex h-15 w-15 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-md ring-4 ring-card">
+            <span className="-mt-6 flex h-15 w-15 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-lg shadow-brand-600/30 ring-4 ring-card">
               <Plus size={30} strokeWidth={2.5} />
             </span>
           </button>

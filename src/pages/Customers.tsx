@@ -61,7 +61,7 @@ export function CustomerList() {
   const stats = [
     { label: 'Total', value: rows.length, icon: Users, cls: 'bg-slate-100 text-slate-600' },
     { label: 'Pessoa física', value: rows.filter((r) => tipoOf(r.c.document) === 'pf').length, icon: UserRound, cls: 'bg-brand-50 text-brand-600' },
-    { label: 'Pessoa jurídica', value: rows.filter((r) => tipoOf(r.c.document) === 'pj').length, icon: Building2, cls: 'bg-slate-100 text-slate-600' },
+    { label: 'Pessoa jurídica', value: rows.filter((r) => tipoOf(r.c.document) === 'pj').length, icon: Building2, cls: 'bg-violet-100 text-violet-600 dark:bg-violet-950 dark:text-violet-300' },
     { label: 'Novos este mês', value: rows.filter((r) => r.c.created_at.slice(0, 7) === month).length, icon: UserPlus, cls: 'bg-emerald-50 text-emerald-700' },
   ]
   const origins = [...new Set(rows.map((r) => r.c.source).filter(Boolean))] as string[]
@@ -78,14 +78,14 @@ export function CustomerList() {
 
       <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
         {stats.map((st) => (
-          <div key={st.label} className="flex items-center gap-3 rounded-2xl bg-card p-3 ring-1 ring-slate-200">
+          <div key={st.label} className="flex items-center gap-3 rounded-2xl bg-card p-3 ring-1 ring-slate-200/70">
             <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${st.cls}`}><st.icon size={20} /></span>
             <span><span className="tnum block text-xl font-extrabold leading-tight">{st.value}</span><span className="block text-xs text-slate-500">{st.label}</span></span>
           </div>
         ))}
       </div>
 
-      <div className="space-y-2 rounded-2xl bg-card p-3 ring-1 ring-slate-200">
+      <div className="space-y-2 rounded-2xl bg-card p-3 ring-1 ring-slate-200/70">
         <Input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Nome, CPF/CNPJ, telefone, e-mail, cidade ou placa" />
         <div className="grid grid-cols-2 gap-2 lg:grid-cols-[1fr_1fr_auto]">
           <Select value={tipo} onChange={(e) => setTipo(e.target.value as Tipo)} aria-label="Tipo">
@@ -114,7 +114,7 @@ export function CustomerList() {
           {/* Celular: cartões */}
           <ul className="space-y-2 lg:hidden">
             {list.map(({ c, vs }) => (
-              <li key={c.id} className="flex items-center gap-2 rounded-2xl bg-card p-3 ring-1 ring-slate-200">
+              <li key={c.id} className="flex items-center gap-2 rounded-2xl bg-card p-3 ring-1 ring-slate-200/70">
                 <Link to={`/clientes/${c.id}`} className="flex min-w-0 flex-1 items-center gap-3">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-50 font-extrabold text-brand-700">{c.name.trim()[0]?.toUpperCase()}</span>
                   <span className="min-w-0 flex-1">
@@ -129,7 +129,7 @@ export function CustomerList() {
           </ul>
 
           {/* Computador: tabela */}
-          <div className="hidden overflow-x-auto rounded-2xl bg-card ring-1 ring-slate-200 lg:block">
+          <div className="hidden overflow-x-auto rounded-2xl bg-card ring-1 ring-slate-200/70 lg:block">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-slate-200 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -140,7 +140,7 @@ export function CustomerList() {
                 {list.map(({ c, vs }) => (
                   <tr key={c.id} className="cursor-pointer border-b border-slate-100 last:border-0 hover:bg-slate-50" onClick={() => nav(`/clientes/${c.id}`)}>
                     <td className="px-4 py-2.5 font-semibold"><span className="mr-2 inline-block h-2 w-2 rounded-full bg-emerald-500" />{c.name}</td>
-                    <td className="px-3 py-2.5"><Badge className={tipoOf(c.document) === 'pj' ? 'bg-slate-100 text-slate-700' : 'bg-brand-50 text-brand-700'}>{tipoOf(c.document) === 'pj' ? 'PJ' : 'PF'}</Badge></td>
+                    <td className="px-3 py-2.5"><Badge className={tipoOf(c.document) === 'pj' ? 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300' : 'bg-brand-50 text-brand-700'}>{tipoOf(c.document) === 'pj' ? 'PJ' : 'PF'}</Badge></td>
                     <td className="tnum px-3 py-2.5">{phone(c.phone) || '—'}</td>
                     <td className="px-3 py-2.5">{c.city || '—'}</td>
                     <td className="px-3 py-2.5"><span className="flex flex-wrap gap-1">{vs.slice(0, 2).map((v) => <Plate key={v.id} value={v.plate} size="sm" />)}{vs.length > 2 && <span className="text-xs text-slate-500">+{vs.length - 2}</span>}</span></td>

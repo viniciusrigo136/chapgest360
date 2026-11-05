@@ -1,22 +1,22 @@
 import type { PaymentMethod, Settings, Stage } from './types'
 
 export const DEFAULT_STAGES: Stage[] = [
-  { key: 'recebido', name: 'Veículo recebido', color: '#475569', public: true },
-  { key: 'avaliacao', name: 'Avaliação', color: '#2563eb', public: true },
-  { key: 'aguardando_aprovacao', name: 'Aguardando aprovação', color: '#b45309', public: true },
-  { key: 'aguardando_pecas', name: 'Aguardando peças', color: '#b45309', public: true },
-  { key: 'funilaria', name: 'Funilaria', color: '#2563eb', public: true },
-  { key: 'preparacao', name: 'Preparação', color: '#2563eb', public: true },
-  { key: 'pintura', name: 'Pintura', color: '#2563eb', public: true },
-  { key: 'montagem', name: 'Montagem', color: '#2563eb', public: true },
-  { key: 'acabamento', name: 'Polimento e acabamento', color: '#2563eb', public: true },
-  { key: 'pronto', name: 'Pronto para entrega', color: '#047857', public: true },
-  { key: 'entregue', name: 'Entregue', color: '#475569', public: true },
+  { key: 'recebido', name: 'Veículo recebido', color: '#64748b', public: true },
+  { key: 'avaliacao', name: 'Avaliação', color: '#0ea5e9', public: true },
+  { key: 'aguardando_aprovacao', name: 'Aguardando aprovação', color: '#f59e0b', public: true },
+  { key: 'aguardando_pecas', name: 'Aguardando peças', color: '#f97316', public: true },
+  { key: 'funilaria', name: 'Funilaria', color: '#8b5cf6', public: true },
+  { key: 'preparacao', name: 'Preparação', color: '#a855f7', public: true },
+  { key: 'pintura', name: 'Pintura', color: '#ec4899', public: true },
+  { key: 'montagem', name: 'Montagem', color: '#14b8a6', public: true },
+  { key: 'acabamento', name: 'Polimento e acabamento', color: '#06b6d4', public: true },
+  { key: 'pronto', name: 'Pronto para entrega', color: '#22c55e', public: true },
+  { key: 'entregue', name: 'Entregue', color: '#15803d', public: true },
 ]
 
 export const DEFAULT_SETTINGS: Settings = {
   trade_name: 'Minha Oficina',
-  brand_color: '#2563eb',
+  brand_color: '#1d4ed8',
   max_installments: 10,
   installment_fee_percent: 0,
   cash_discount_percent: 0,
@@ -62,12 +62,12 @@ export const CHECKLIST_ITEMS = ['Estepe', 'Macaco', 'Chave de roda', 'Triângulo
 export const DAMAGE_TYPES = { amassado: 'Amassado', risco: 'Risco', quebrado: 'Quebrado/trincado', ferrugem: 'Ferrugem', pintura: 'Pintura danificada' } as const
 
 export const QUOTE_STATUS = {
-  rascunho: { label: 'Rascunho', cls: 'bg-slate-100 text-slate-700' },
-  enviado: { label: 'Esperando cliente', cls: 'bg-amber-50 text-amber-700' },
-  aprovado: { label: 'Aprovado', cls: 'bg-emerald-50 text-emerald-700' },
-  recusado: { label: 'Recusado', cls: 'bg-red-50 text-red-600' },
-  expirado: { label: 'Expirado', cls: 'bg-amber-50 text-amber-700' },
-  cancelado: { label: 'Cancelado', cls: 'bg-slate-100 text-slate-600' },
+  rascunho: { label: 'Rascunho', cls: 'bg-slate-200 text-slate-800' },
+  enviado: { label: 'Esperando cliente', cls: 'bg-amber-100 text-amber-800' },
+  aprovado: { label: 'Aprovado', cls: 'bg-green-100 text-green-900' },
+  recusado: { label: 'Recusado', cls: 'bg-red-100 text-red-900' },
+  expirado: { label: 'Expirado', cls: 'bg-orange-100 text-orange-900' },
+  cancelado: { label: 'Cancelado', cls: 'bg-slate-300 text-slate-700' },
 } as const
 
 export const COST_CATEGORIES = { tinta: 'Tintas', material: 'Materiais', peca: 'Peças', terceiro: 'Terceirizados', horas: 'Horas próprias', outro: 'Outros' } as const
@@ -106,15 +106,4 @@ export function normalizeBrand(b?: string) {
   if (!t) return ''
   const alias: Record<string, string> = { vw: 'Volkswagen', gm: 'Chevrolet', chevy: 'Chevrolet', mercedes: 'Mercedes-Benz', citroen: 'Citroën', chery: 'Caoa Chery' }
   return alias[t] ?? VEHICLE_BRANDS.find((x) => x.toLowerCase().startsWith(t)) ?? ''
-}
-
-/** Cores antigas das etapas padrão (antes da identidade TecGest 360), para atualizar configurações já salvas. */
-const OLD_STAGE_COLORS: Record<string, string> = { recebido: '#64748b', avaliacao: '#0ea5e9', aguardando_aprovacao: '#f59e0b', aguardando_pecas: '#f97316', funilaria: '#8b5cf6', preparacao: '#a855f7', pintura: '#ec4899', montagem: '#14b8a6', acabamento: '#06b6d4', pronto: '#22c55e', entregue: '#15803d' }
-
-/** Troca as cores antigas padrão pelas novas; cores escolhidas pelo usuário ficam como estão. */
-export function upgradeStages(stages: Stage[]): Stage[] {
-  return stages.map((st) => {
-    const def = DEFAULT_STAGES.find((d) => d.key === st.key)
-    return def && OLD_STAGE_COLORS[st.key] === st.color.toLowerCase() ? { ...st, color: def.color } : st
-  })
 }

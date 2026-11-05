@@ -20,7 +20,7 @@ export function currentTheme(): Theme {
 
 export function applyTheme(t: Theme = currentTheme()) {
   document.documentElement.classList.toggle('dark', t === 'dark')
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t === 'dark' ? '#0f172a' : '#2563eb')
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t === 'dark' ? '#0b1120' : '#1f47c7')
 }
 
 export function useTheme() {

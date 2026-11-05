@@ -59,7 +59,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <button type="button" onClick={() => setSummary(true)} className="flex w-full items-center gap-3 rounded-2xl bg-card p-3 text-left ring-1 ring-slate-200 active:bg-slate-50">
+      <button type="button" onClick={() => setSummary(true)} className="flex w-full items-center gap-3 rounded-2xl bg-card p-3 text-left ring-1 ring-slate-200/70 active:bg-slate-50">
         <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${urgent ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-700'}`}>
           {urgent ? <AlertTriangle size={20} /> : <Newspaper size={20} />}
         </span>
@@ -87,7 +87,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <Link to="/indicadores" className="flex items-center gap-3 rounded-2xl bg-card p-3 ring-1 ring-slate-200 active:bg-slate-50">
+          <Link to="/indicadores" className="flex items-center gap-3 rounded-2xl bg-card p-3 ring-1 ring-slate-200/70 active:bg-slate-50">
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600"><BarChart3 size={20} /></span>
             <span className="flex-1"><span className="block font-bold">Indicadores</span><span className="block text-sm text-slate-500">Vendas, recebimentos e serviços por marca</span></span>
             <ChevronRight size={20} className="text-slate-400" />

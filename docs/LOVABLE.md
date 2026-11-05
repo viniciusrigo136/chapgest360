@@ -56,8 +56,7 @@ Este projeto foi substituído pelo código do sistema "Lataria" (gestão para fu
 Detalhes importantes do projeto:
 - Vite 5 + React 18 + TypeScript + Tailwind CSS v4 (via @tailwindcss/vite, sem tailwind.config e sem postcss.config; as cores e fontes ficam no bloco @theme de src/index.css). Não crie tailwind.config.ts nem postcss.config.js.
 - Modo escuro: classe "dark" no <html>, cores em variáveis no src/index.css. Não converta para outro sistema de temas.
-- Identidade visual TecGest 360: cores em tokens no @theme de src/index.css (primária #2563EB, grafite #0F172A, fundo #F8FAFC, raio 10px). Não use gradientes nem cores fora da paleta.
-- Ícones: lucide-react. Fontes: Manrope (títulos), Inter (texto) e Barlow Condensed (placa), via Google Fonts no index.html.
+- Ícones: lucide-react. Fontes: Plus Jakarta Sans e Barlow Condensed (Google Fonts, no index.html).
 - O acesso ao banco fica em src/lib/cloudBackend.ts e é escolhido em src/lib/db.ts pelas variáveis VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY. Não crie outra camada de dados e não use src/integrations/supabase no lugar dela.
 - Sem essas variáveis o app roda em "modo local" (IndexedDB), com a faixa amarela "Modo local de teste".
 - Rotas com react-router (BrowserRouter). A rota pública do cliente é /c/:token e não exige login.

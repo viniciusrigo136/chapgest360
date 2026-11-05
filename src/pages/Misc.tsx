@@ -1,7 +1,6 @@
 import { askConfirm } from '../lib/confirm'
 import { useState } from 'react'
-import { BookOpen, Plus } from 'lucide-react'
-import { Logo } from '../components/Logo'
+import { BookOpen, Car, Plus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { KIND_LABEL } from '../components/ItemsEditor'
 import { Button, Empty, ErrorBox, Field, Input, Loading, MoneyInput, PageHeader, Select, Sheet } from '../components/ui'
@@ -24,7 +23,7 @@ export function Catalog() {
       <p className="mb-3 text-sm text-slate-600">Ao digitar no orçamento, esses serviços aparecem como sugestão já com o preço. Os serviços que você usa nos orçamentos também aparecem sozinhos.</p>
       <Input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar" className="mb-3" />
       {list.length === 0 ? <Empty icon={BookOpen} title="Nenhum serviço cadastrado" text="Ex.: Pintura de para-choque, Polimento completo, Martelinho de ouro." /> : (
-        <ul className="divide-y divide-slate-100 overflow-hidden rounded-2xl bg-card ring-1 ring-slate-200">
+        <ul className="divide-y divide-slate-100 overflow-hidden rounded-2xl bg-card ring-1 ring-slate-200/70">
           {list.map((c) => (
             <li key={c.id}>
               <button type="button" onClick={() => setEdit(c)} className="flex w-full items-center justify-between px-4 py-3 text-left active:bg-slate-50">
@@ -95,7 +94,8 @@ export function Login() {
   }
   return (
     <div className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center gap-4 p-6">
-      <h1 className="mx-auto"><Logo size="lg" /></h1>
+      <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-lg shadow-brand-600/30"><Car size={34} /></span>
+      <h1 className="text-center text-3xl font-extrabold tracking-tight">Lataria</h1>
       <p className="-mt-2 text-center text-sm text-slate-500">Orçamentos e serviços de funilaria e pintura, direto do celular</p>
       <Field label="E-mail"><Input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
       <Field label="Senha"><Input type="password" autoComplete={mode === 'in' ? 'current-password' : 'new-password'} value={pw} onChange={(e) => setPw(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && submit()} /></Field>
